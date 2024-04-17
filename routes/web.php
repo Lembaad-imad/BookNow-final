@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AcceuilController;
+use App\Http\Controllers\EvenementController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -10,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 
 Route::get('/', [AcceuilController::class, 'index'])->name('aucceuil.edit');
 
+Route::resource('event', EvenementController::class);
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

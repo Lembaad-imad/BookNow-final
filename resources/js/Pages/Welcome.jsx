@@ -26,14 +26,14 @@ export default function Welcome({ children, auth }) {
                                     Home
                                 </NavLink>
                                 <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("event.index")}
+                                    active={route().current("index")}
                                 >
                                     Events
                                 </NavLink>
                                 <NavLink
-                                    href={route("dashboard")}
-                                    active={route().current("dashboard")}
+                                    href={route("event.index")}
+                                    active={route().current("index")}
                                 >
                                     Contacs
                                 </NavLink>
