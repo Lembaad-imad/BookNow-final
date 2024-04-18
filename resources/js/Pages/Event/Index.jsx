@@ -8,11 +8,10 @@ import Searchinput from "@/Components/Searchinput";
 import Slider from "@/Components/Slider";
 import TextInput from "@/Components/TextInput";
 import { Link, router } from "@inertiajs/react";
-import { useState } from "react";
-import { Inertia } from '@inertiajs/inertia-react';
+import { useEffect, useState } from "react";
 export default function Index({ auth, events, queryParams = null }) {
   const [selectedPrice, setSelectedPrice] = useState("");
-  const [checkboxvalues , setCheckboxValues] = useState([])
+  const [checkboxvalues, setCheckboxValues] = useState([]);
   queryParams = queryParams || {};
   const searchFieldChanged = (e) => {
     const { name, value } = e.target;
@@ -33,34 +32,31 @@ export default function Index({ auth, events, queryParams = null }) {
     queryParams["price"] = value;
     router.get(route("event.index"), queryParams);
   };
+  useEffect(() => {
+    const storedCheckboxValues = localStorage.getItem("checkboxValues");
+    if (storedCheckboxValues) {
+      setCheckboxValues(JSON.parse(storedCheckboxValues));
+    }
+  }, []);
   const handleChnagecheckbox = (e) => {
     const { checked, value } = e.target;
+    let updatedCategories;
 
-    // Update local state of selected categories
     if (checked) {
-        setCheckboxValues([...checkboxvalues, value]);
+      updatedCategories = [...checkboxvalues, value];
     } else {
-        setCheckboxValues(checkboxvalues.filter(cat => cat !== value));
+      updatedCategories = checkboxvalues.filter((val) => val !== value);
     }
 
-    // Update queryParams based on the updated checkboxvalues
-    const updatedCategory = checked
-        ? [...checkboxvalues, value]
-        : checkboxvalues.filter(cat => cat !== value);
+    setCheckboxValues(updatedCategories);
 
-    // Update queryParams object without mutating the original queryParams
-    const updatedQueryParams = { ...queryParams };
-    updatedQueryParams["Category"] = updatedCategory;
+    localStorage.setItem("checkboxValues", JSON.stringify(updatedCategories));
 
-    // Update the route using Inertia.visit
-    Inertia.visit(route("event.index", updatedQueryParams));
+    queryParams["categories"] = updatedCategories;
+    router.get(route("event.index"), queryParams);
+  };
 
-    // Log checkboxvalues for debugging
-};
-console.log(checkboxvalues);
-
-
-
+  console.log(queryParams.categories);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 ">
@@ -77,6 +73,7 @@ console.log(checkboxvalues);
         queryParams={queryParams}
         selectedPrice={selectedPrice}
         handleChnagecheckbox={handleChnagecheckbox}
+        checkboxvalues={checkboxvalues}
       />
       <Footerpage />
     </div>

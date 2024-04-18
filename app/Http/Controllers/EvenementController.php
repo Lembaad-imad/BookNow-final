@@ -24,6 +24,10 @@ class EvenementController extends Controller
         } elseif(request()->has("price") && request("price") === "Free"){
             $query->where("prix", "=", 0);
         }
+        if (request()->has("categories")) {
+            $categories = request("categories");
+            $query->whereIn('category', $categories);
+        }
         $events = $query->paginate(9);
        
       

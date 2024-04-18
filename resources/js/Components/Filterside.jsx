@@ -67,7 +67,7 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Filterside({ events ,handlePriceChange,selectedPrice,handleChnagecheckbox}) {
+export default function Filterside({ events ,handlePriceChange,selectedPrice,handleChnagecheckbox,checkboxvalues}) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
 
@@ -314,6 +314,7 @@ export default function Filterside({ events ,handlePriceChange,selectedPrice,han
                       as="div"
                       key={section.id}
                       className="border-b border-gray-200 py-6"
+                      
                     >
                       {({ open }) => (
                         <>
@@ -374,14 +375,15 @@ export default function Filterside({ events ,handlePriceChange,selectedPrice,han
                                    />
                                       ) : (
                                         <input
-                                          id={`filter-${section.id}-${optionIdx}`}
-                                          name={`${section.id}[]`}
-                                          defaultValue={option.value}
-                                          type="checkbox"
-                                          onChange={handleChnagecheckbox}
-                                          defaultChecked={option.checked}
-                                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                        />
+                                        key={option.value}
+                                        id={`filter-${section.id}-${optionIdx}`}
+                                        name={`${section.id}[]`}
+                                        value={option.value}
+                                        type="checkbox"
+                                        onChange={handleChnagecheckbox}
+                                        checked={checkboxvalues.includes(option.value)}
+                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                      />
                                       )}
                                       <label
                                         htmlFor={`filter-${section.id}-${optionIdx}`}
