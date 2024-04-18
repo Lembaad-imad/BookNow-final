@@ -24,9 +24,7 @@ export default function Slider() {
 
   return (
     <div className="flex justify-center ">
-      {/*<!-- Component: Slider with controls inside --> */}
       <div className="relative  glide-01 flex justify-center mt-5 " style={{width:"75rem" ,height:"15rem"}} >
-        {/*    <!-- Slides --> */}
         <div className="overflow-hidden rounded-lg" data-glide-el="track">
           <ul className="whitespace-no-wrap flex-no-wrap [backface-visibility: hidden] [transform-style: preserve-3d] [touch-action: pan-Y] [will-change: transform] relative flex w-full overflow-hidden p-0">
             <li>
@@ -61,7 +59,6 @@ export default function Slider() {
             </li>
           </ul>
         </div>
-        {/*    <!-- Controls --> */}
         <div
           className="absolute left-0 flex items-center justify-between w-full h-0 px-4 top-1/2 "
           data-glide-el="controls"
@@ -110,7 +107,6 @@ export default function Slider() {
           </button>
         </div>
       </div>
-      {/*<!-- End Slider with controls inside --> */}
     </div>
   )
 }

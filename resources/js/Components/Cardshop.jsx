@@ -42,7 +42,7 @@ export default function Cardshop({ event }) {
                 <div className="flex justify-between items-center">
                     <div className="text-sm">
                         <p className="font-bold">From :</p>
-                        <p className="font-bold text-blue-900 text-2xl">10$</p>
+                        <p className="font-bold text-blue-900 text-2xl">${event.prix}</p>
                     </div>
                     <button className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Buy

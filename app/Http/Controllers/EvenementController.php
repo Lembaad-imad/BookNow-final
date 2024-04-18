@@ -15,12 +15,23 @@ class EvenementController extends Controller
      */
     public function index()
     {
-        $events = Evenement::paginate(9)->onEachSide(1);
-
+        $query = Evenement::query();
+        if (request("search")) {
+            $query->where("titre", "like", "%" . request("search") . "%");
+        }
+        if (request()->has("price") && request("price") === "Paid") {
+            $query->where("prix", ">", 0);
+        } elseif(request()->has("price") && request("price") === "Free"){
+            $query->where("prix", "=", 0);
+        }
+        $events = $query->paginate(9);
+       
+      
         $auth = Auth::user();
         return Inertia("Event/Index",[
+            'events' =>$events,
+            "queryParams"=> request()->query()?:null,
             'auth' => $auth,
-            'events' =>$events
         ]);
     }
 
