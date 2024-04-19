@@ -5,7 +5,6 @@ import NavLink from "@/Components/NavLink";
 import { Link } from "@inertiajs/react";
 
 export default function Welcome({ children, auth }) {
-    console.log(auth);
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900 ">
             <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">

@@ -10,7 +10,12 @@ use App\Http\Controllers\ProfileController;
 
 
 Route::get('/', [AcceuilController::class, 'index'])->name('aucceuil.edit');
-
+Route::get('/pricing', function () {
+    return Inertia::render('pricing');
+});
+Route::get('/contact', function () {
+    return Inertia::render('contact');
+});
 Route::resource('event', EvenementController::class);
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
