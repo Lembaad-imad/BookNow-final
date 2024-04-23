@@ -9,8 +9,12 @@ import Slider from "@/Components/Slider";
 import TextInput from "@/Components/TextInput";
 import { Link, router } from "@inertiajs/react";
 import { useEffect, useState } from "react";
-export default function Index({ auth, events, queryParams = null }) {
+
+export default function Index({ auth, events, queryParams = null,allCategories }) {
+
   const [selectedPrice, setSelectedPrice] = useState("");
+  const [dateDebut, setDateDebut] = useState();
+  const [dateFin, setDateFin] = useState();
   const [checkboxvalues, setCheckboxValues] = useState([]);
   queryParams = queryParams || {};
   const searchFieldChanged = (e) => {
@@ -32,12 +36,7 @@ export default function Index({ auth, events, queryParams = null }) {
     queryParams["price"] = value;
     router.get(route("event.index"), queryParams);
   };
-  useEffect(() => {
-    const storedCheckboxValues = localStorage.getItem("checkboxValues");
-    if (storedCheckboxValues) {
-      setCheckboxValues(JSON.parse(storedCheckboxValues));
-    }
-  }, []);
+
   const handleChnagecheckbox = (e) => {
     const { checked, value } = e.target;
     let updatedCategories;
@@ -49,18 +48,36 @@ export default function Index({ auth, events, queryParams = null }) {
     }
 
     setCheckboxValues(updatedCategories);
-
-    localStorage.setItem("checkboxValues", JSON.stringify(updatedCategories));
-
     queryParams["categories"] = updatedCategories;
     router.get(route("event.index"), queryParams);
   };
+  const handleDateChange = (e) => {
+    const { name, value } = e.target;
 
-  console.log(queryParams.categories);
+    if (name === "date-start") {
+      setDateDebut(value);
+    } else {
+      setDateFin(value);
+    }
+
+    if (dateDebut && dateFin) {
+      router.get(route("event.index"), {
+        ...queryParams,
+        "date-start": dateDebut,
+        "date-fin": dateFin,
+      });
+    }
+  };
+
+
+ 
+
+
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 ">
       <Navbar auth={auth} />
+      
       <Slider />
       <Searchinput
         searchFieldChanged={searchFieldChanged}
@@ -74,6 +91,9 @@ export default function Index({ auth, events, queryParams = null }) {
         selectedPrice={selectedPrice}
         handleChnagecheckbox={handleChnagecheckbox}
         checkboxvalues={checkboxvalues}
+        allCategories={allCategories}
+        handleDateChange={handleDateChange}
+
       />
       <Footerpage />
     </div>

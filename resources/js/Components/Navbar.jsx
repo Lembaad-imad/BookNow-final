@@ -3,8 +3,7 @@ import Dropdown from "@/Components/Dropdown";
 import Footerpage from "@/Components/Footerpage";
 import NavLink from "@/Components/NavLink";
 import { Link } from "@inertiajs/react";
-export default function Navbar({auth}){
-    console.log(auth);
+export default function Navbar({auth,header}){
     return(
 
     <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
@@ -45,6 +44,7 @@ export default function Navbar({auth}){
                             </NavLink>
                         </div>
                     </div>
+                    
                     {!auth ? (
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
                             <div className=" flex">
@@ -111,6 +111,13 @@ export default function Navbar({auth}){
                     )}
                 </div>
             </div>
+                     {header && (
+                <header className="bg-blue-900 dark:bg-gray-800 shadow">
+                    <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {header}
+                    </div>
+                </header>
+            )}
         </nav>
     )
 }

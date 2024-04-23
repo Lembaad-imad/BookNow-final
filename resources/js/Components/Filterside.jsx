@@ -29,17 +29,7 @@ const filters = [
     ],
   },
 
-  {
-    id: "category",
-    name: "Category",
-    options: [
-      { value: "ea", label: "ea", checked: false },
-      { value: "magni", label: "magni", checked: false },
-      { value: "perspiciatis", label: "perspiciatis", checked: false },
-      { value: "facere", label: "facere", checked: false },
-      { value: "sed", label: "sed", checked: false },
-    ],
-  },
+
 
   {
     id: "date",
@@ -67,10 +57,49 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Filterside({ events ,handlePriceChange,selectedPrice,handleChnagecheckbox,checkboxvalues}) {
+export default function Filterside({ events ,handlePriceChange,selectedPrice,handleChnagecheckbox,handleDateChange,allCategories}) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-
-
+  const filters = [
+    {
+      id: "price",
+      name: "price",
+      options: [
+        { value: "Paid", label: "Paid" },
+        { value: "Free", label: "Free" },
+      ],
+    },
+  
+    {
+      id: "category",
+      name: "Category",
+      options: allCategories.map((category) => ({
+        value: category.value,
+        label: category.value,
+        checked:category.checked, 
+      })),
+    },
+  
+    {
+      id: "date",
+      name: "Date",
+      options: [
+        {
+          value: "start",
+          label: "Start Date",
+          type: "date",
+          defaultValue: "",
+          checked: false,
+        },
+        {
+          value: "end",
+          label: "End Date",
+          type: "date",
+          defaultValue: "",
+          checked: false,
+        },
+      ],
+    },
+  ];
   return (
     <>
       <div className="bg-white">
@@ -288,8 +317,7 @@ export default function Filterside({ events ,handlePriceChange,selectedPrice,han
                   type="button"
                   className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
                 >
-                  <span className="sr-only">View grid</span>
-                  <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
+                
                 </button>
                 <button
                   type="button"
@@ -357,6 +385,7 @@ export default function Filterside({ events ,handlePriceChange,selectedPrice,han
                                         id={`filter-${section.id}-${option.value}`}
                                         name={`${section.id}-${option.value}`}
                                         defaultValue={option.defaultValue}
+                                        onChange={handleDateChange} 
                                         type="date"
                                         className="h-10 w-full px-3 border border-gray-300 rounded-md"
                                       />
@@ -381,7 +410,7 @@ export default function Filterside({ events ,handlePriceChange,selectedPrice,han
                                         value={option.value}
                                         type="checkbox"
                                         onChange={handleChnagecheckbox}
-                                        checked={checkboxvalues.includes(option.value)}
+                                        checked={option.checked}
                                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                       />
                                       )}

@@ -21,9 +21,7 @@ return new class extends Migration
             $table->string('cover_path');
             $table->longText('description');
             $table->boolean('return');
-            $table->string('category');
             $table->integer('capacity');
-            $table->string('status' );
             $table->decimal('prix', 10, 2);
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');

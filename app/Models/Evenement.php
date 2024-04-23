@@ -8,6 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Evenement extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'titre',
+        'localisation',
+        'start_date',
+        'end_date',
+        'logo_path',
+        'cover_path',
+        'description',
+        'return',
+        'capacity',
+        'prix',
+        'created_by',
+        'updated_by',
+    ];
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
@@ -16,5 +30,8 @@ class Evenement extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
-
+    public function categories()
+    {
+        return $this->belongsToMany(Categorie::class, 'categorie_event');
+    }
 }

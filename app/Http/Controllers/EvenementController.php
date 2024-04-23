@@ -2,40 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
+use App\Models\Categorie;
 use App\Models\Evenement;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 use App\Http\Requests\StoreEvenementRequest;
 use App\Http\Requests\UpdateEvenementRequest;
-use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-
+use Illuminate\Support\Str;
 class EvenementController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $query = Evenement::query();
-        if (request("search")) {
-            $query->where("titre", "like", "%" . request("search") . "%");
+
+        if ($request->has("search")) {
+            $query->where("titre", "like", "%" . $request->input("search") . "%");
         }
-        if (request()->has("price") && request("price") === "Paid") {
-            $query->where("prix", ">", 0);
-        } elseif(request()->has("price") && request("price") === "Free"){
-            $query->where("prix", "=", 0);
+
+        if ($request->has("price")) {
+            if ($request->input("price") === "Paid") {
+                $query->where("prix", ">", 0);
+            } elseif ($request->input("price") === "Free") {
+                $query->where("prix", "=", 0);
+            }
         }
-        if (request()->has("categories")) {
-            $categories = request("categories");
-            $query->whereIn('category', $categories);
+
+        if ($request->has("categories")) {
+            $categories = $request->input("categories");
+
+            Categorie::whereIn('label', $categories)->update(['checked' => true]);
+            $checkedCategories = Categorie::where('checked', true)->pluck('label')->toArray();
+
+            $query->whereHas('categories', function ($query) use ($checkedCategories) {
+                $query->whereIn('label', $checkedCategories);
+            });
+        } else {
+            Categorie::query()->update(['checked' => false]);
         }
+
+        $query->with('categories');
+
         $events = $query->paginate(9);
-       
-      
-        $auth = Auth::user();
-        return Inertia("Event/Index",[
-            'events' =>$events,
-            "queryParams"=> request()->query()?:null,
-            'auth' => $auth,
+        return Inertia::render('Event/Index', [
+            'events' => $events,
+            'queryParams' => $request->query() ?: null,
+            'auth' => Auth::user(),
+            'allCategories' => Categorie::all()
         ]);
     }
 
@@ -44,7 +62,10 @@ class EvenementController extends Controller
      */
     public function create()
     {
-        //
+        return inertia("Event/Create",[
+            'auth' => Auth::user(),
+            'allCategories' => Categorie::all()
+        ]);
     }
 
     /**
@@ -52,7 +73,22 @@ class EvenementController extends Controller
      */
     public function store(StoreEvenementRequest $request)
     {
-        //
+        $data= $request->validated();
+        /** @var $image \Illuminate\Http\UploadedFile */
+      $image = $data['cover_path'] ?? null;
+      $logo = $data['logo_path'] ?? null;
+      $data['created_by'] = Auth::id();
+      $data['updated_by'] = Auth::id();
+      if ($image) {
+          $data['cover_path'] = $image->store('event/' . Str::random(), 'public');
+      }
+      if ($logo) {
+        $data['logo_path'] = $image->store('event/' . Str::random(), 'public');
+    }
+      Evenement::create($data);
+
+      return to_route('event.index')
+          ->with('success', 'Event was created');
     }
 
     /**

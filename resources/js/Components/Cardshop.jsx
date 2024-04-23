@@ -1,4 +1,5 @@
 export default function Cardshop({ event }) {
+    
     return (
         <div className="max-w-xs rounded-xl overflow-hidden shadow-lg w-64 cursor-pointer" onClick={() => console.log('hello')}>
             <img
@@ -35,8 +36,10 @@ export default function Cardshop({ event }) {
                 <div className="font-bold text-sm mb-2">
                     Date : {event.start_date}
                 </div>
-                <div className="inline-block text-white font-bold text-xs p-1 rounded-md bg-clip-text">
-                    <span className="bg-blue-900 p-1 rounded-md">{event.category}</span>
+                <div className=" text-white font-bold flex gap-1 flex-wrap text-xs p-1 rounded-md bg-clip-text ">
+                    {event.categories.map(categorie =>
+                    <span className="bg-blue-900 p-1 rounded-md ">{categorie.label}</span>
+                    )}
                 </div>
 
                 <div className="flex justify-between items-center">

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Categorie;
 use App\Models\Evenement;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -14,16 +15,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        Categorie::factory()->count(10)->create();
         User::create([
             'name' => 'Zura',
             'email' => 'imad5@gmail.com',
             'password' => bcrypt('imad123456'),
             'email_verified_at' => time() 
         ]);
-        Evenement::factory()
-        ->count(20)
-        ->create();
+        Evenement::factory()->count(20)->create()->each(function ($event) {
+            $event->categories()->attach(Categorie::all()->random(rand(1, 5))->pluck('id')->toArray());
+        });
     }
 }
