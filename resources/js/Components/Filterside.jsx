@@ -57,8 +57,9 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Filterside({ events ,handlePriceChange,selectedPrice,handleChnagecheckbox,handleDateChange,allCategories}) {
+export default function Filterside({ events,paginationevent ,handlePriceChange,selectedPrice,handleChnagecheckbox,handleDateChange,allCategories}) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  // console.log(events.data)
   const filters = [
     {
       id: "price",
@@ -439,7 +440,7 @@ export default function Filterside({ events ,handlePriceChange,selectedPrice,han
                     ))}
                   </div>
                   <div>
-                    <Pagination links={events.links} />
+                    <Pagination links={paginationevent.links} />
                   </div>
                 </div>
               </div>

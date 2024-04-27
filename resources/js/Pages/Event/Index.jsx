@@ -10,8 +10,8 @@ import TextInput from "@/Components/TextInput";
 import { Link, router } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 
-export default function Index({ auth, events, queryParams = null,allCategories }) {
-
+export default function Index({ auth, events, queryParams = null,allCategories,paginationevent }) {
+  console.log(events)
   const [selectedPrice, setSelectedPrice] = useState("");
   const [dateDebut, setDateDebut] = useState();
   const [dateFin, setDateFin] = useState();
@@ -93,6 +93,7 @@ export default function Index({ auth, events, queryParams = null,allCategories }
         checkboxvalues={checkboxvalues}
         allCategories={allCategories}
         handleDateChange={handleDateChange}
+        paginationevent={paginationevent}
 
       />
       <Footerpage />

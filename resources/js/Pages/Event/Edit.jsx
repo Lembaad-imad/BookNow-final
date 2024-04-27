@@ -8,23 +8,24 @@ import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, useForm } from "@inertiajs/react";
 import TomSelect from "tom-select";
-export default function Create({ auth ,allCategories}) {
+export default function Create({ auth, allCategories,event }) {
   const { data, setData, post, errors, reset } = useForm({
-    titre: "",
-    localisation: "",
-    start_date: "",
-    end_date: "",
-    logo_path: "",
+    titre:  event.titre || '',
+    localisation: event.localisation || '',
+    start_date: event.start_date || '',
+    end_date: event.end_date || '',
+    logo_path:  "",
     cover_path: "",
-    description: "",
-    return: "",
-    capacity: "",
-    prix: "",
+    description: event.description || '',
+    return: event.return || '',
+    capacity: event.capacity || '',
+    prix: event.prix || '',
+    _method: "put",
   });
-console.log(data)
+  console.log(event);
   const onSubmit = (e) => {
     e.preventDefault();
-    post(route("event.store"));
+    post(route("eventlist.update",event));
   };
 
   return (
@@ -34,7 +35,7 @@ console.log(data)
         header={
           <div className="flex justify-between items-center">
             <h2 className="font-semibold text-xl text-white dark:text-gray-200 leading-tight">
-              Create new Event
+            Edit Event "{event.titre}"
             </h2>
           </div>
         }
@@ -188,9 +189,9 @@ console.log(data)
 
                   <InputError message={errors.prix} className="mt-2" />
                 </div>
-                
+             
                 <div className="mt-4">
-                  <InputLabel htmlFor="event_logo_path" value="Event Logo" />
+                <InputLabel htmlFor="event_logo_path" value="Event logo" />
                   <TextInput
                     id="logo_path"
                     type="file"
@@ -199,6 +200,16 @@ console.log(data)
                     onChange={(e) => setData("logo_path", e.target.files[0])}
                   />
                   <InputError message={errors.logo_path} className="mt-2" />
+
+
+                  
+                  <div className="mt-2">
+                  {event.logo_path && (
+                <div className="mb-4">
+                  <img src={event.logo_path} className="w-56" />
+                </div>
+              )}
+              </div>
                 </div>
                 <div className="mt-4">
                   <InputLabel htmlFor="event_cover_path" value="Event Cover" />
@@ -210,27 +221,35 @@ console.log(data)
                     onChange={(e) => setData("cover_path", e.target.files[0])}
                   />
                   <InputError message={errors.cover_path} className="mt-2" />
-                </div>
-                <div className="mt-4">
-                <InputLabel htmlFor="event_catagories" value="Event catagories" />
-
-                <SelectInput
-                  name="categories"
-                  id="categories"
-                  className="mt-1 block w-full"
-                  onChange={(e) => setData("categories", e.target.value)}
-                >
-                  <option value="">Select Status</option>
-                  {
-                    allCategories.map((category) =>
-                    <option value={category.id} >{category.value}</option>
                   
-                  )
-                  }
-                </SelectInput>
-
-                <InputError message={errors.categories} className="mt-2" />
+                </div>
+                <div className="mt-2">
+                  {event.cover_path && (
+                <div className="mb-4">
+                  <img src={event.cover_path} className="w-56" />
+                </div>
+              )}
               </div>
+                <div className="mt-4">
+                  <InputLabel
+                    htmlFor="event_catagories"
+                    value="Event catagories"
+                  />
+
+                  <SelectInput
+                    name="categories"
+                    id="categories"
+                    className="mt-1 block w-full"
+                    onChange={(e) => setData("categories", e.target.value)}
+                  >
+                    <option value="">Select Status</option>
+                    {allCategories.map((category) => (
+                      <option value={category.id}>{category.value}</option>
+                    ))}
+                  </SelectInput>
+
+                  <InputError message={errors.categories} className="mt-2" />
+                </div>
                 <div className="mt-4 text-right">
                   <Link
                     href={route("event.index")}

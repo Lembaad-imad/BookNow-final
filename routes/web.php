@@ -8,14 +8,14 @@ use App\Http\Controllers\AcceuilController;
 use App\Http\Controllers\AnotherController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EvenementController;
+use App\Http\Controllers\MyeventController;
 
-
-Route::get('/', [AcceuilController::class, 'index'])->name('aucceuil.edit');
+Route::get('/', [AcceuilController::class, 'index'])->name('aucceuil');
 
 Route::resource('event', EvenementController::class);
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+    return Inertia::render('Welcome');
+})->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -23,5 +23,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::resource('eventlist', MyeventController::class);
 
 require __DIR__.'/auth.php';

@@ -1,6 +1,6 @@
 export default function Footerpage(){
     return(
-        <div class="flex items-end w-full min-h-screen bg-white">
+        <div class="mt-10">
 
     <footer class="w-full text-black bg-blue-900 body-font">
         <div

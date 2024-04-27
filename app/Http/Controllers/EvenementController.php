@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Categorie;
 use App\Models\Evenement;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\View;
+use App\Http\Resources\EventResource;
 use App\Http\Requests\StoreEvenementRequest;
 use App\Http\Requests\UpdateEvenementRequest;
-use Illuminate\Support\Str;
+
 class EvenementController extends Controller
 {
     /**
@@ -45,12 +47,13 @@ class EvenementController extends Controller
         } else {
             Categorie::query()->update(['checked' => false]);
         }
-
         $query->with('categories');
-
         $events = $query->paginate(9);
+        $paginationevent = $query->paginate(9);
+     
         return Inertia::render('Event/Index', [
-            'events' => $events,
+            'events' => EventResource::collection($events),
+            'paginationevent'=>$paginationevent,
             'queryParams' => $request->query() ?: null,
             'auth' => Auth::user(),
             'allCategories' => Categorie::all()
@@ -62,9 +65,12 @@ class EvenementController extends Controller
      */
     public function create()
     {
+        
+        $categories = Categorie::pluck('value','id');
         return inertia("Event/Create",[
             'auth' => Auth::user(),
             'allCategories' => Categorie::all()
+
         ]);
     }
 
@@ -83,10 +89,13 @@ class EvenementController extends Controller
           $data['cover_path'] = $image->store('event/' . Str::random(), 'public');
       }
       if ($logo) {
-        $data['logo_path'] = $image->store('event/' . Str::random(), 'public');
+        $data['logo_path'] = $logo->store('event/' . Str::random(), 'public');
     }
-      Evenement::create($data);
+    $event = Evenement::create($data);
 
+    $event->categories()->sync($request->validate([
+        'categories' => 'required',
+    ]));
       return to_route('event.index')
           ->with('success', 'Event was created');
     }
@@ -94,9 +103,16 @@ class EvenementController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Evenement $evenement)
+    public function show($id)
     {
-        //
+        // dd($evenement);
+        // $event=$request;
+        // dd($event);
+        $event = Evenement::find($id);
+        return inertia('Event/Show', [
+            'evenement' => new EventResource($event),
+            
+        ]);
     }
 
     /**

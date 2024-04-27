@@ -1,7 +1,11 @@
+import { Link, router } from "@inertiajs/react";
+
 export default function Cardshop({ event }) {
-    
+    const handleClick =(e)=>{
+        router.get(route("event.show",event.id));
+    }
     return (
-        <div className="max-w-xs rounded-xl overflow-hidden shadow-lg w-64 cursor-pointer" onClick={() => console.log('hello')}>
+        <div className="max-w-xs rounded-xl overflow-hidden shadow-lg w-64 cursor-pointer" onClick={()=>handleClick(event)}>
             <img
                 className="w-full"
                 src={event.logo_path}

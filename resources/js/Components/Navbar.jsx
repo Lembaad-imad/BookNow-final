@@ -2,7 +2,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo";
 import Dropdown from "@/Components/Dropdown";
 import Footerpage from "@/Components/Footerpage";
 import NavLink from "@/Components/NavLink";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 export default function Navbar({auth,header}){
     return(
 
@@ -18,8 +18,8 @@ export default function Navbar({auth,header}){
 
                         <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex gap-10">
                             <NavLink
-                                href={route("dashboard")}
-                                active={route().current("dashboard")}
+                                href={route("aucceuil")}
+                                active={route().current("aucceuil")}
                             >
                                 Home
                             </NavLink>
@@ -49,14 +49,14 @@ export default function Navbar({auth,header}){
                         <div className="hidden sm:flex sm:items-center sm:ms-6">
                             <div className=" flex">
                                 <Link
-                                    href=""
+                                    href={route("login")}
                                     className="bg-white py-2 px-4 text-blue-900 border text-center border-blue-900 rounded shadow transition-all hover:bg-gray-200 mr-2 inline-block w-28 h-10"
                                 >
                                     LOGIN
                                 </Link>
 
                                 <Link
-                                    href=""
+                                     href={route("register")}
                                     className="bg-blue-900 py-2 px-4 text-white  text-center rounded shadow transition-all hover:bg-gray-200 mr-2 inline-block w-28 h-10"
                                 >
                                     SINGUP
@@ -96,6 +96,11 @@ export default function Navbar({auth,header}){
                                             href={route("profile.edit")}
                                         >
                                             Profile
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={(route("eventlist.index"))}
+                                        >
+                                            My Event
                                         </Dropdown.Link>
                                         <Dropdown.Link
                                             href={route("logout")}
