@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\View;
 use App\Http\Requests\StoreEvenementRequest;
 use App\Http\Requests\UpdateEvenementRequest;
 use Illuminate\Support\Str;
+
 class EvenementController extends Controller
 {
     /**
@@ -19,39 +20,7 @@ class EvenementController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Evenement::query();
-
-        if ($request->has("search")) {
-            $query->where("titre", "like", "%" . $request->input("search") . "%");
-        }
-
-        if ($request->has("price")) {
-            if ($request->input("price") === "Paid") {
-                $query->where("prix", ">", 0);
-            } elseif ($request->input("price") === "Free") {
-                $query->where("prix", "=", 0);
-            }
-        }
-
-        if ($request->has("categories")) {
-            $categories = $request->input("categories");
-
-            Categorie::whereIn('label', $categories)->update(['checked' => true]);
-            $checkedCategories = Categorie::where('checked', true)->pluck('label')->toArray();
-
-            $query->whereHas('categories', function ($query) use ($checkedCategories) {
-                $query->whereIn('label', $checkedCategories);
-            });
-        } else {
-            Categorie::query()->update(['checked' => false]);
-        }
-
-        $query->with('categories');
-
-        $events = $query->paginate(9);
         return Inertia::render('Event/Index', [
-            'events' => $events,
-            'queryParams' => $request->query() ?: null,
             'auth' => Auth::user(),
             'allCategories' => Categorie::all()
         ]);
@@ -62,9 +31,9 @@ class EvenementController extends Controller
      */
     public function create()
     {
-        return inertia("Event/Create",[
+        return inertia("Event/Create", [
             'auth' => Auth::user(),
-            'allCategories' => Categorie::all()
+            'allCategories' => Categorie::all(),
         ]);
     }
 
@@ -73,22 +42,22 @@ class EvenementController extends Controller
      */
     public function store(StoreEvenementRequest $request)
     {
-        $data= $request->validated();
+        $data = $request->validated();
         /** @var $image \Illuminate\Http\UploadedFile */
-      $image = $data['cover_path'] ?? null;
-      $logo = $data['logo_path'] ?? null;
-      $data['created_by'] = Auth::id();
-      $data['updated_by'] = Auth::id();
-      if ($image) {
-          $data['cover_path'] = $image->store('event/' . Str::random(), 'public');
-      }
-      if ($logo) {
-        $data['logo_path'] = $image->store('event/' . Str::random(), 'public');
-    }
-      Evenement::create($data);
+        $image = $data['cover_path'] ?? null;
+        $logo = $data['logo_path'] ?? null;
+        $data['created_by'] = Auth::id();
+        $data['updated_by'] = Auth::id();
+        if ($image) {
+            $data['cover_path'] = $image->store('event/' . Str::random(), 'public');
+        }
+        if ($logo) {
+            $data['logo_path'] = $image->store('event/' . Str::random(), 'public');
+        }
+        Evenement::create($data);
 
-      return to_route('event.index')
-          ->with('success', 'Event was created');
+        return to_route('event.index')
+            ->with('success', 'Event was created');
     }
 
     /**

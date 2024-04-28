@@ -14,4 +14,5 @@ Route::get('/user', function (Request $request) {
 use App\Http\Controllers\Api\EventApiHandler;
 
 // Update the resource route definition
-// Route::resource('events', EvenementApiController::class);
+
+Route::resource('events', EvenementApiController::class);
