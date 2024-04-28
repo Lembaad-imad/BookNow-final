@@ -13,6 +13,7 @@ export default function Index({ auth, allCategories }) {
     startt_date: "",
     end_date: "",
   });
+  const [isLoading, setIsloading] = useState(false);
 
   const [apiResponse, setApiResponse] = useState({
     events: {
@@ -41,6 +42,7 @@ export default function Index({ auth, allCategories }) {
   const handleSubmit = (e) => {};
 
   useEffect(() => {
+    setIsloading(true);
     axios
       .get("/api/events", {
         params: {
@@ -62,6 +64,8 @@ export default function Index({ auth, allCategories }) {
             setSearchArgs({ ...searchArgs, categories: response.data.searchParams.categories });
           }
         }
+      }).finaly(() => {
+        setIsloading(false);
       });
   }, [searchArgs.name, searchArgs.price, searchArgs.categories]);
 
