@@ -11,6 +11,18 @@ use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\MyeventController;
 
 Route::get('/', [AcceuilController::class, 'index'])->name('aucceuil');
+Route::get('/pricing', function(){
+    return Inertia::render('Pricing')->name('Pricing');
+});
+
+Route::get('/pricing', function () {
+    return Inertia::render('Pricing');
+})->name('Pricing');
+
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+})->name('Contact');
+
 
 Route::resource('event', EvenementController::class);
 Route::get('/dashboard', function () {

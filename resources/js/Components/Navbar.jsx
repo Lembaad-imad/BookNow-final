@@ -12,7 +12,7 @@ export default function Navbar({auth,header}){
                     <div className="flex">
                         <div className="shrink-0 flex items-center">
                             <Link href="/">
-                                <ApplicationLogo className="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                                <ApplicationLogo className=" h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                             </Link>
                         </div>
 
@@ -30,17 +30,17 @@ export default function Navbar({auth,header}){
                                 Events
                             </NavLink>
                             <NavLink
-                                href={route("event.index")}
-                                active={route().current("index")}
-                            >
-
-                                Contacs
-                            </NavLink>
-                            <NavLink
-                                href={route("dashboard")}
-                                active={route().current("dashboard")}
+                                href={route("Pricing")}
+                                active={route().current("Pricing")}
                             >
                                 Pricing
+                            </NavLink>
+                            <NavLink
+                                href={route("Contact")}
+                                active={route().current("Contact")}
+                            >
+
+                                Contact
                             </NavLink>
                         </div>
                     </div>
