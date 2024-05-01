@@ -5,7 +5,7 @@ export default function ApplicationLogo(props) {
         // </svg>
        
         <div className="w-32 h-auto">
-        <img src="/images/logo 1.png" alt="Application Logo" {...props} className="w-full h-auto" />
+        <img src="/images/log.png" alt="Application Logo" {...props} className="w-full h-auto" />
     </div>
         
         

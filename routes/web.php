@@ -18,6 +18,14 @@ Route::get('/dashboard', function () {
     return Inertia::render('Welcome');
 })->name('dashboard');
 
+Route::get('/pricing', function () {
+    return Inertia::render('Pricing');
+})->name('Pricing');
+
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+})->name('Contact');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

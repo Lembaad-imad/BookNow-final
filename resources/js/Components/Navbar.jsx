@@ -31,16 +31,16 @@ export default function Navbar({ auth, header,notifcart,countcart ,clickedEvents
                 Events
               </NavLink>
               <NavLink
-                href={route("event.index")}
-                active={route().current("index")}
-              >
-                Contacs
-              </NavLink>
-              <NavLink
-                href={route("dashboard")}
-                active={route().current("dashboard")}
+                href={route("Pricing")}
+                active={route().current("Pricing")}
               >
                 Pricing
+              </NavLink>
+              <NavLink
+                href={route("Contact")}
+                active={route().current("Contact")}
+              >
+                Contact
               </NavLink>
             </div>
           </div>
@@ -50,14 +50,14 @@ export default function Navbar({ auth, header,notifcart,countcart ,clickedEvents
               <div className=" flex">
                 <Link
                   href={route("login")}
-                  className="bg-white py-2 px-4 text-blue-900 border text-center border-blue-900 rounded shadow transition-all hover:bg-gray-200 mr-2 inline-block w-28 h-10"
+                  className="bg-white py-2 px-4 text-teal-600 border text-center border-teal-600 rounded shadow transition-all hover:bg-gray-200 mr-2 inline-block w-28 h-10"
                 >
                   LOGIN
                 </Link>
 
                 <Link
                   href={route("register")}
-                  className="bg-blue-900 py-2 px-4 text-white  text-center rounded shadow transition-all hover:bg-gray-200 mr-2 inline-block w-28 h-10"
+                  className="bg-teal-600  py-2 px-4 text-white  text-center rounded shadow transition-all hover:bg-gray-200 mr-2 inline-block w-28 h-10"
                 >
                   SINGUP
                 </Link>
@@ -118,8 +118,8 @@ export default function Navbar({ auth, header,notifcart,countcart ,clickedEvents
         </div>
       </div>
       {header && (
-        <header className="bg-blue-900 dark:bg-gray-800 shadow">
-          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <header className="bg-teal-600 w-full h-auto rounded-lg shadow-lg  ">
+          <div className="max-w-7xl mt-2 mx-auto py-4 px-2 sm:px-4 lg:px-4">
             {header}
           </div>
         </header>

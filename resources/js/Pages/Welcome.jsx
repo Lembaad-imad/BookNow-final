@@ -10,7 +10,7 @@ export default function Welcome({ children, auth }) {
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900 ">
             <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="">
                    <Navbar auth={auth}/>
                 </div>
             </nav>
@@ -34,14 +34,14 @@ export default function Welcome({ children, auth }) {
                         <div>
                             <Link
                                 href={route("event.create")}
-                                className="bg-white py-2 px-4 text-blue-900 border text-center font-bold border-blue-900 rounded shadow transition-all hover:bg-gray-200 mr-2 inline-block w-28 h-10"
+                                className="bg-white py-2 px-4 text-teal-600 border text-center font-bold border-blue-900 rounded shadow transition-all hover:bg-gray-200 mr-2 inline-block w-28 h-10"
                             >
                                 CREATE
                             </Link>
 
                             <Link
                                  href={route("event.index")}
-                                className="bg-white py-2 px-4 text-blue-900 border text-center font-bold rounded shadow transition-all hover:bg-gray-200 mr-2 inline-block w-28 h-10"
+                                className="bg-white py-2 px-4 text-teal-600 border text-center font-bold rounded shadow transition-all hover:bg-gray-200 mr-2 inline-block w-28 h-10"
                             >
                                 BUY
                             </Link>
@@ -53,17 +53,17 @@ export default function Welcome({ children, auth }) {
             <section className="max-w-7xl mx-auto relative py-4">
                 <div className="h-auto relative">
                     <div>
-                        <p className="text-blue-900 text-5xl font-bold text-center sm:text-4xl">
+                        <p className="text-teal-600  text-5xl font-bold text-center sm:text-4xl">
                             WHY US?
                         </p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-4">
                         <div className="bg-gray-100 w-full border rounded-md shadow-md p-5 flex flex-col gap-8">
                             <div className="flex flex-row items-center font-bold">
-                                <p className="flex-grow">SUPPORT</p>
+                                <p className="flex-grow ">SUPPORT</p>
                                 <Link
                                     href="#"
-                                    className="bg-blue-900 py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 inline-block w-28 h-10 sm:w-auto sm:h-12"
+                                    className="bg-teal-600  py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 inline-block w-28 h-10 sm:w-auto sm:h-12"
                                 >
                                     contact us
                                 </Link>
@@ -85,7 +85,7 @@ export default function Welcome({ children, auth }) {
                                 <p className="flex-grow">SIMPLIFY</p>
                                 <Link
                                     href="#"
-                                    className="bg-blue-900 py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 inline-block w-28 h-10 sm:w-auto sm:h-12"
+                                    className="bg-teal-600  py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 inline-block w-28 h-10 sm:w-auto sm:h-12"
                                 >
                                     buy now
                                 </Link>
@@ -105,7 +105,7 @@ export default function Welcome({ children, auth }) {
                                 <p className="flex-grow">STREAMLINE</p>
                                 <Link
                                     href="#"
-                                    className="bg-blue-900 py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 hover:text-blue-900 inline-block w-28 h-10 sm:w-auto sm:h-12"
+                                    className="bg-teal-600  py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 hover:text-blue-900 inline-block w-28 h-10 sm:w-auto sm:h-12"
                                 >
                                     create
                                 </Link>
@@ -128,7 +128,7 @@ export default function Welcome({ children, auth }) {
 
             <section className="max-w-7xl mx-auto relative py-4 flex flex-col gap-10 mt-14 p-10">
                 <div>
-                    <p className="font-bold bg-blue-900 text-white p-3 inline-block rounded-xl">
+                    <p className="font-bold bg-teal-600  text-white p-3 inline-block rounded-xl">
                         Trending events
                     </p>
                 </div>
@@ -337,7 +337,7 @@ export default function Welcome({ children, auth }) {
                         <div>
                             <Link
                                 href=""
-                                className="bg-blue-900 py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 hover:text-blue-900 mr-2 inline-block"
+                                className="bg-teal-600  py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 hover:text-blue-900 mr-2 inline-block"
                             >
                                 Get Started Now
                             </Link>

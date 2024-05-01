@@ -26,13 +26,13 @@ console.log(data)
     e.preventDefault();
     post(route("event.store"));
   };
-
+  console.log(allCategories);
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 ">
       <Navbar
         auth={auth}
         header={
-          <div className="flex justify-between items-center">
+          <div className="text-center">
             <h2 className="font-semibold text-xl text-white dark:text-gray-200 leading-tight">
               Create new Event
             </h2>
@@ -224,7 +224,6 @@ console.log(data)
                   {
                     allCategories.map((category) =>
                     <option value={category.id} >{category.value}</option>
-                  
                   )
                   }
                 </SelectInput>
