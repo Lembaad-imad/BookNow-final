@@ -1,12 +1,39 @@
 import Footerpage from "@/Components/Footerpage";
 import Navbar from "@/Components/Navbar";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-export default function Create({ auth, evenement }) {
+export default function Show({ auth, evenement }) {
+  const [notifcart, setNotifCart] = useState(
+    localStorage.getItem('notifcart') === 'true'
+  );
+  const [countcart, setCountCart] = useState(
+    parseInt(localStorage.getItem('countcart')) || 0
+  );
+  const [clickedEvents, setClickedEvents] = useState(
+    JSON.parse(localStorage.getItem('clickedEvents')) || []
+  );
+
+  useEffect(() => {
+    localStorage.setItem('notifcart', notifcart);
+    localStorage.setItem('countcart', countcart);
+    localStorage.setItem('clickedEvents', JSON.stringify(clickedEvents));
+  }, [notifcart, countcart, clickedEvents]);
+  
+console.log(clickedEvents);
+  const handleClick = () =>{
+    if (!clickedEvents.some(event => event.id === evenement.id)) {
+      setClickedEvents([...clickedEvents, evenement]);
+      setNotifCart(true);
+      setCountCart(countcart + 1);
+    }
+  }
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Navbar
         auth={auth}
+        notifcart={notifcart}
+        countcart={countcart}
+        clickedEvents={clickedEvents}
         header={
           <div className="flex justify-between items-center">
             <h2 className="font-semibold text-xl text-white dark:text-gray-200 leading-tight">
@@ -46,7 +73,7 @@ export default function Create({ auth, evenement }) {
                 <div>
                   <InputLabel
                     label="Created By"
-                    value={evenement.createdby.name}
+                    value={evenement.created_by.name}
                   />
                   <InputLabel
                     label="Create Date"
@@ -61,7 +88,9 @@ export default function Create({ auth, evenement }) {
                 />
               </div>
               <div className="mt-4">
-                <button className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <button className="bg-blue-900 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={handleClick}
+                >
                   Buy Ticket
                 </button>
               </div>

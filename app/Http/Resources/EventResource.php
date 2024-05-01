@@ -31,11 +31,13 @@ class EventResource extends JsonResource
             'return' => $this->return,
             'capacity' => $this->capacity,
             'prix' => $this->prix,
+            'status' => $this->status,
             'categories' => $this->categories,
+            'codepromos' => $this->codepromos,
             'created_at' =>  (new Carbon($this->created_at))->format('Y-m-d'),
             'updated_at' => $this->updated_at,
-            'createdby' => new UserResource($this->createdby),
-            'updatedby' => new UserResource($this->updatedby)
+            'created_by' => new UserResource($this->createdby),
+            'updated_by' => new UserResource($this->updatedby)
         ];
     }
 }

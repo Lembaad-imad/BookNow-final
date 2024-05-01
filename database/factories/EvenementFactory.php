@@ -25,6 +25,8 @@ class EvenementFactory extends Factory
             'cover_path' => fake()->imageUrl(640, 480, 'nature', true),
             'description' => fake()->realText(),
             'return' => fake()->boolean,
+            'status' => fake()->randomElement (['pending', 'approved',
+            'unapproved' ]),
             'capacity' => fake()->numberBetween(50, 1000),
             'prix' => fake()->randomFloat(2, 10, 5000),
             'created_by' => 1, 

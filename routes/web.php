@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\AcceuilController;
 use App\Http\Controllers\AnotherController;
+use App\Http\Controllers\CodePromosController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\MyeventController;
@@ -24,5 +25,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('eventlist', MyeventController::class);
+Route::resource('codepromos', CodePromosController::class);
 
 require __DIR__.'/auth.php';

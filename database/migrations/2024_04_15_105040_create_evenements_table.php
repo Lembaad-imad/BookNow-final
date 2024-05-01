@@ -18,6 +18,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('logo_path');
+            $table->string('status');
             $table->string('cover_path');
             $table->longText('description');
             $table->boolean('return');

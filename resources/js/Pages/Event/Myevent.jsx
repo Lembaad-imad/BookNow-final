@@ -157,11 +157,10 @@ export default function Create({ events, auth, queryParams = null, success,pagin
                     >
                       <option value="">Select Status</option>
                       <option value="pending">Pending</option>
-                      <option value="in_progress">In Progress</option>
-                      <option value="completed">Completed</option>
+                      <option value="approved">Approved</option>
+                      <option value="unapproved">Unapproved</option>
                     </SelectInput>
                   </th>
-                  <th className="px-3 py-3"></th>
                   <th className="px-3 py-3"></th>
                   <th className="px-3 py-3"></th>
                   <th className="px-3 py-3"></th>
@@ -196,7 +195,7 @@ export default function Create({ events, auth, queryParams = null, success,pagin
 
                     <td className="px-3 py-2">{event.created_at}</td>
 
-                    {/* <td className="px-3 py-2">{event.created_by.name}</td> */}
+                   <td className="px-3 py-2">{event.created_by.name}</td>
                     <td className="px-3 py-2">
                       <Link
                         href={route("eventlist.edit", event.id)}
@@ -221,6 +220,7 @@ export default function Create({ events, auth, queryParams = null, success,pagin
       </div>
       
       <Footerpage />
+      
     </div>
   );
 }

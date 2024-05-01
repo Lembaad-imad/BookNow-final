@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Categorie;
+use App\Models\CodePromos;
 use App\Models\Evenement;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -16,6 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         Categorie::factory()->count(10)->create();
+        CodePromos::factory()->count(15)->create();
         User::create([
             'name' => 'Zura',
             'email' => 'imad5@gmail.com',

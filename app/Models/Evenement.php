@@ -34,4 +34,8 @@ class Evenement extends Model
     {
         return $this->belongsToMany(Categorie::class, 'categorie_event');
     }
+    public function codepromos()
+    {
+        return $this->hasMany(CodePromos::class,'event_id');
+    }
 }

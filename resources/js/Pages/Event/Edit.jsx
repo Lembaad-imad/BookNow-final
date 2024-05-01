@@ -1,14 +1,21 @@
+import CodePromos from "@/Components/CodePromos";
+import CodePromosEdit from "@/Components/CodePromosEdit";
 import Footerpage from "@/Components/Footerpage";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import Navbar from "@/Components/Navbar";
 import SelectInput from "@/Components/SelectInput";
+import TableCodePromos from "@/Components/TableCodePromos";
 import TextAreaInput from "@/Components/TextAreaInput";
 import TextInput from "@/Components/TextInput";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, useForm } from "@inertiajs/react";
+import { useState } from "react";
 import TomSelect from "tom-select";
 export default function Create({ auth, allCategories,event }) {
+  const [showModal, setShowModal] = useState(false);
+  const [idCodePromos, setIdCodePromos] = useState();
+  const [showModalEdit, setShowModalEdit] = useState(false);
   const { data, setData, post, errors, reset } = useForm({
     titre:  event.titre || '',
     localisation: event.localisation || '',
@@ -22,12 +29,17 @@ export default function Create({ auth, allCategories,event }) {
     prix: event.prix || '',
     _method: "put",
   });
-  console.log(event);
+  console.log(event.codepromos);
   const onSubmit = (e) => {
     e.preventDefault();
     post(route("eventlist.update",event));
   };
-
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+  const toggleModalEdit = () => {
+    setShowModalEdit(!showModalEdit);
+  };
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 ">
       <Navbar
@@ -262,6 +274,33 @@ export default function Create({ auth, allCategories,event }) {
                   </button>
                 </div>
               </form>
+              <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg  mt-10">
+
+              <button  onClick={toggleModal} className="bg-blue-900 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600">
+                    Create Promo code
+                  </button>
+                  <div className="mt-5">
+                    <TableCodePromos codepromosevent={event.codepromos} 
+                    toggleModalEdit={toggleModalEdit}
+                    setIdCodePromos={setIdCodePromos}
+                    />
+                  </div>
+              </div>
+                    {showModal && (
+                      <CodePromos toggleModal={toggleModal} 
+                      event={event.id}
+                      />
+                    )}
+                    {showModalEdit && (
+                      <CodePromosEdit toggleModalEdit={toggleModalEdit} 
+                      codepromosevent={event.codepromos} 
+                      event={event.id}
+                      idCodePromos={idCodePromos}
+                      />
+                    )}
+                   
+                   
+          
             </div>
           </div>
         </div>

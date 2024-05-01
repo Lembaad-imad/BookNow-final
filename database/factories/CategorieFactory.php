@@ -33,7 +33,7 @@ class CategorieFactory extends Factory
         }
 
         return [
-            'value' => $this->faker->word,
+            'value' => $categories[$index],
             'label' => $categories[$index++],
             'checked' => $this->faker->boolean,
         ];
