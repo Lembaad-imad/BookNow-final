@@ -1,18 +1,26 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@layer utilities {
-    @variants responsive {
-      /* Hide scrollbar for Chrome, Safari, and Opera */
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
   
-  
-      /* Hide scrollbar for IE, Edge, and Firefox */
-      .no-scrollbar {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
-      }
-    }
-  } 
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: whitesmoke;
+  border-radius: 25px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(202, 202, 204);
+  border-radius: 25px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

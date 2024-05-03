@@ -10,6 +10,7 @@ use App\Http\Controllers\CodePromosController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\EvenementController;
 use App\Http\Controllers\MyeventController;
+use App\Http\Controllers\TicketController;
 
 Route::get('/', [AcceuilController::class, 'index'])->name('aucceuil');
 
@@ -26,5 +27,13 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('eventlist', MyeventController::class);
 Route::resource('codepromos', CodePromosController::class);
+Route::resource('checkout', TicketController::class);
+Route::get('/pricing', function () {
+    return Inertia::render('Pricing');
+})->name('Pricing');
+
+Route::get('/contact', function () {
+    return Inertia::render('Contact');
+})->name('Contact');
 
 require __DIR__.'/auth.php';

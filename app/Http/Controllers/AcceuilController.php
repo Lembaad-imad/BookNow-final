@@ -12,7 +12,7 @@ class AcceuilController extends Controller
    {
     $auth = Auth::user();
     return Inertia::render('Welcome', [
-        'auth' => $auth,
+       
     ]);
 }
 }

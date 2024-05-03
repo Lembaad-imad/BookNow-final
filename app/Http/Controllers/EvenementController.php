@@ -55,7 +55,7 @@ class EvenementController extends Controller
             'events' => EventResource::collection($events),
             'paginationevent'=>$paginationevent,
             'queryParams' => $request->query() ?: null,
-            'auth' => Auth::user(),
+            // 'auth' => Auth::user(),
             'allCategories' => Categorie::all()
         ]);
     }

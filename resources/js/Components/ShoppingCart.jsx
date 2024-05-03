@@ -2,15 +2,29 @@ import { Fragment, useState } from "react";
 import { Menu, Transition, Dialog } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import useCheckedEvent from "@/zustand/CheckedEvent";
+
 import React from "react";
+import { Link, router } from "@inertiajs/react";
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function ShoppingCart({ notifcart, countcart, clickedEvents }) {
+export default function ShoppingCart() {
+
+  const { notifcart, countcart, clickedEvents, removeFromCart } = useCheckedEvent((state) => ({
+    notifcart: state.notifcart,
+    countcart: state.countcart,
+    clickedEvents: state.clickedEvents,
+    removeFromCart: state.removeFromCart,
+  }));
+
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log(clickedEvents);
+  const handleClickRemove = (id) => {
+    removeFromCart(id);
+  };
+
   return (
     <Menu as="div" className="relative inline-block text-left">
       <div className="t-0 absolute left-3">
@@ -23,7 +37,7 @@ export default function ShoppingCart({ notifcart, countcart, clickedEvents }) {
       <div>
         <Menu.Button
           className="py-2"
-          onClick={() => setIsOpen((prev) => !prev)} // Toggle isOpen state
+          onClick={() => setIsOpen((prev) => !prev)} 
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +57,7 @@ export default function ShoppingCart({ notifcart, countcart, clickedEvents }) {
       </div>
 
       <Transition
-        show={isOpen} // Use isOpen state to control visibility
+        show={isOpen} 
         as={Fragment}
         enter="transition ease-out duration-100"
         enterFrom="transform opacity-0 scale-95"
@@ -109,6 +123,7 @@ export default function ShoppingCart({ notifcart, countcart, clickedEvents }) {
                                   <div className="flex">
                                     <button
                                       type="button"
+                                      onClick={()=>handleClickRemove(event.id)}
                                       className="font-medium text-blue-900 hover:text-indigo-500 mb-2"
                                     >
                                       Remove
@@ -122,12 +137,12 @@ export default function ShoppingCart({ notifcart, countcart, clickedEvents }) {
                       </div>
                       <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                         <div className="mt-6">
-                          <a
-                            href="#"
+                          <Link
+                            href={route("checkout.index")}
                             className="flex items-center justify-center rounded-md border border-transparent bg-blue-900 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                           >
                             Checkout
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>
