@@ -51,7 +51,10 @@ export default function Show({ auth, evenement }) {
   const addToCart = useCheckedEvent((state) => state.addToCart);
 
   const handleClick = () => {
-    addToCart(evenement);
+    if (!clickedEvents.some(event => event.id === evenement.id)){
+
+      addToCart(evenement);
+    }
   };
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -149,8 +152,9 @@ export default function Show({ auth, evenement }) {
                 <p className="text-gray-500 text-base font-normal mb-5 ">
                   {evenement.created_at}
                 </p>
+                
                 <p className="text-gray-500 text-base font-normal mb-5 mr-10">
-                  {evenement.return}
+                  {evenement.return === 1 ? 'Yes' : 'No' }
                 </p>
               </div>
             </div>

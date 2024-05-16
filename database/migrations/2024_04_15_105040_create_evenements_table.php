@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('cover_path');
             $table->longText('description');
+            $table->longText('decision')->nullable();
             $table->boolean('return');
             $table->integer('capacity');
             $table->decimal('prix', 10, 2);

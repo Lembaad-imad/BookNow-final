@@ -5,16 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use Illuminate\Http\Request;
 
 class TicketController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // dd('ge');
-       return inertia('Event/Checkout');
+        $clickedEvents = $request->input();
+        $quanitut = $request->input('eventQuantities');
+    
+        dd($clickedEvents);
+    
+    
+        // return response()->json(['success' => true]);
     }
 
     /**

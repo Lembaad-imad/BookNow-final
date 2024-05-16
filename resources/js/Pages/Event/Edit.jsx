@@ -1,5 +1,6 @@
 import CodePromos from "@/Components/CodePromos";
 import CodePromosEdit from "@/Components/CodePromosEdit";
+import DecisionAdmin from "@/Components/DecisionAdmin";
 import Footerpage from "@/Components/Footerpage";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
@@ -22,6 +23,7 @@ export default function Create({ auth, allCategories,event }) {
     start_date: event.start_date || '',
     end_date: event.end_date || '',
     logo_path:  "",
+   
     cover_path: "",
     description: event.description || '',
     return: event.return || '',
@@ -40,6 +42,7 @@ export default function Create({ auth, allCategories,event }) {
   const toggleModalEdit = () => {
     setShowModalEdit(!showModalEdit);
   };
+  console.log(event.status)
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 ">
       <Navbar
@@ -60,7 +63,35 @@ export default function Create({ auth, allCategories,event }) {
                 onSubmit={onSubmit}
                 className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg"
               >
-                <div>
+               
+                  <div >
+                  <h1 >
+                    
+                    Event Status : <span 
+                    className={ event.status ==="pending" ? "text-orange-300 font-bold text-xl" : event.status ==="approved" ? "text-green-600 font-bold text-xl" :"text-red-600 font-bold text-xl" }>
+                      {event.status}
+                      </span>  
+                      </h1>
+                   
+                  </div>
+                  <div className="mt-4">
+                    <div className="flex gap-10">
+                      <button className="bg-green-800 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600">Approved</button>
+                      <button className="bg-red-800 py-1 px-3 text-white rounded shadow transition-all hover:bg-red-600">Unapproved</button>
+                    </div>
+                    <p>Di</p>
+                    
+                    <div  className="mt-4">
+                    <TextAreaInput
+                    id="description"
+                    name="description"
+                    value={data.description}
+                    className="mt-1 block w-full"
+                    onChange={(e) => setData("description", e.target.value)}
+                  />
+                  </div>
+                  </div>
+                <div className="mt-4">
                   <InputLabel htmlFor="event_title" value="Event Title" />
 
                   <TextInput

@@ -1,3 +1,4 @@
+import React from 'react'
 import Footerpage from "@/Components/Footerpage";
 import Navbar from "@/Components/Navbar";
 import Pagination from "@/Components/Pagination";
@@ -7,91 +8,62 @@ import TextInput from "@/Components/TextInput";
 import { Head, Link, router, useForm } from "@inertiajs/react";
 import { EVENT_STATUS_CLASS_MAP, EVENT_STATUS_TEXT_MAP } from "@/constants.jsx";
 import { useState ,useEffect} from "react";
-import TableListEvent from "./TableListEvent";
-export default function Create({ events, auth, queryParams = null, success,paginationevent,urlpath }) {
-  const [displaySuccess, setDisplaySuccess] = useState(success);
-  // useEffect(() => {
-  //   if (success) {
-  //     setDisplaySuccess(success);
-  //     const timer = setTimeout(() => {
-  //       setDisplaySuccess(null);
-  //     }, 5000); 
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [success]);
-  // queryParams = queryParams || {};
-  // const searchFieldChanged = (name, value) => {
-  //   if (value) {
-  //     queryParams[name] = value;
-  //   } else {
-  //     delete queryParams[name];
-  //   }
-  //   fetchEvents();
-  // };
-
-  // const onKeyPress = (name, e) => {
-  //   if (e.key === "Enter") {
-  //     searchFieldChanged(name, e.target.value);
-  //   }
-  // };
-
-  // const toggleSortDirection = (currentDirection) => {
-  //   return currentDirection === "asc" ? "desc" : "asc";
-  // };
-
-  // const sortChanged = (name) => {
-  //   if (queryParams.sort_field === name) {
-  //     queryParams.sort_direction = toggleSortDirection(
-  //       queryParams.sort_direction
-  //     );
-  //   } else {
-  //     queryParams.sort_field = name;
-  //     queryParams.sort_direction = "asc";
-  //   }
-  //   fetchEvents();
-  // };
-  // const deleteEevent = (event) => {
-  //   if (!window.confirm("Are you sure you want to delete the project?")) {
-  //     return;
-  //   }
-  //   console.log(event.id);
-  //   router.delete(route("eventlist.destroy", event.id));
-  // };
-
-  // const fetchEvents = () => {
-  //   router.get(route("eventlist.index"), queryParams);
-  // };
-  console.log(paginationevent);
-  
-  return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      <Navbar
-        auth={auth}
-        header={
-          <div className="flex justify-between items-center">
-            <h2 className="font-semibold text-xl text-white dark:text-gray-200 leading-tight">
-              My events List
-            </h2>
-          </div>
+const TableListEvent = ({events, auth, queryParams = null, success,paginationevent ,urlpath}) => {
+    useEffect(() => {
+        if (success) {
+          setDisplaySuccess(success);
+          const timer = setTimeout(() => {
+            setDisplaySuccess(null);
+          }, 5000); 
+          return () => clearTimeout(timer);
         }
-      />
-      <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 mt-5">
-   {displaySuccess && (
-  <div className={`py-2 px-4 text-white rounded mb-4 bg-blue-500 ${displaySuccess.includes("deleted") ? 'bg-red-500' : 'bg-green-500'}`}>
-    {displaySuccess}
-  </div>
-)}
-</div>
-
-      <div className="py-8 px-4 sm:px-6 lg:px-8">
-        <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-        <TableListEvent  auth={auth} 
-        urlpath={urlpath}
-    events={events}
-    queryParams={queryParams}
-    paginationevent={paginationevent}
-    />
-          {/* <div className="p-6 text-gray-900 dark:text-gray-100">
+      }, [success]);
+   
+      queryParams = queryParams || {};
+      const searchFieldChanged = (name, value) => {
+        if (value) {
+          queryParams[name] = value;
+        } else {
+          delete queryParams[name];
+        }
+        fetchEvents();
+      };
+    
+      const onKeyPress = (name, e) => {
+        if (e.key === "Enter") {
+          searchFieldChanged(name, e.target.value);
+        }
+      };
+    
+      const toggleSortDirection = (currentDirection) => {
+        return currentDirection === "asc" ? "desc" : "asc";
+      };
+    
+      const sortChanged = (name) => {
+        if (queryParams.sort_field === name) {
+          queryParams.sort_direction = toggleSortDirection(
+            queryParams.sort_direction
+          );
+        } else {
+          queryParams.sort_field = name;
+          queryParams.sort_direction = "asc";
+        }
+        fetchEvents();
+      };
+      const deleteEevent = (event) => {
+        if (!window.confirm("Are you sure you want to delete the project?")) {
+          return;
+        }
+    
+     
+        router.delete(route(`eventlist.destroy`,event.id));
+      };
+    
+      const fetchEvents = () => {
+        router.get(route(`${urlpath}.index`), queryParams);
+      };
+  return (
+     < >
             <table className="w-full text-sm text-left rt1:text-right text-gray-500 dark:text-gary-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
                 <tr className="text-nowrap">
@@ -185,7 +157,7 @@ export default function Create({ events, auth, queryParams = null, success,pagin
                       <img src={event.logo_path} style={{ width: 60 }} />
                     </td>
                     <th className="px-3 py-2 text-gray-800 text-nowrap hover:underline">
-                      <Link href={route("event.show", event.id)}>
+                      <Link href={route(`${urlpath}.show`, event.id)}>
                         {event.titre}
                       </Link>
                     </th>
@@ -205,7 +177,7 @@ export default function Create({ events, auth, queryParams = null, success,pagin
                    <td className="px-3 py-2">{event.created_by.name}</td>
                     <td className="px-3 py-2">
                       <Link
-                        href={route("eventlist.edit", event.id)}
+                        href={route(`eventlist.edit`,{'id' : event.id, 'fromRoute': urlpath} )}
                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
                       >
                         Edit
@@ -221,13 +193,12 @@ export default function Create({ events, auth, queryParams = null, success,pagin
                 ))}
               </tbody>
             </table>
+            <div className='bg-white-500'>
+
             <Pagination links={paginationevent.links} />
-          </div> */}
-        </div>
-      </div>
-      
-      <Footerpage />
-      
-    </div>
-  );
+            </div>
+          </>
+  )
 }
+
+export default TableListEvent

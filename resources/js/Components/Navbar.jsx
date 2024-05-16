@@ -82,7 +82,7 @@ export default function Navbar({ auth, header,notifcart,countcart ,clickedEvents
                         type="button"
                         className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
                       >
-                        <p>{auth.user.name}</p>
+                        <p>{auth.user ?auth.user.name :""}</p>
 
                         <svg
                           className="ms-2 -me-0.5 h-4 w-4"
@@ -103,6 +103,9 @@ export default function Navbar({ auth, header,notifcart,countcart ,clickedEvents
                   <Dropdown.Content>
                     <Dropdown.Link href={route("profile.edit")}>
                       Profile
+                    </Dropdown.Link>
+                    <Dropdown.Link href={route("dashboard.index")}>
+                      Dashboard
                     </Dropdown.Link>
                     <Dropdown.Link href={route("eventlist.index")}>
                       My Event

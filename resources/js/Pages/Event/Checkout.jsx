@@ -2,6 +2,7 @@ import Footerpage from "@/Components/Footerpage";
 import useCheckedEvent from "@/zustand/CheckedEvent";
 import Navbar from "@/Components/Navbar";
 import { useEffect, useState } from "react";
+import { Link, useForm } from "@inertiajs/react";
 
 export default function Checkout({ auth }) {
   const { clickedEvents, removeFromCart } = useCheckedEvent((state) => ({
@@ -15,6 +16,7 @@ export default function Checkout({ auth }) {
   const [totalPriceAfterDiscount, setTotalPriceAfterDiscount] = useState({});
   const [idevent, setIdevent] = useState();
   const [listCodeCoupon, setListCodeCoupon] = useState({});
+  const [ticket, setTciekt] = useState({});
 
   useEffect(() => {
     const initialQuantities = clickedEvents.reduce(
@@ -26,6 +28,7 @@ export default function Checkout({ auth }) {
     );
     setEventQuantities(initialQuantities);
   }, [clickedEvents]);
+  console.log(eventQuantities)
 
   useEffect(() => {
     const newTotalPrices = {};
@@ -34,8 +37,35 @@ export default function Checkout({ auth }) {
       newTotalPrices[event.id] = (quantity * parseFloat(event.prix)).toFixed(2);
     });
     setTotalprice(newTotalPrices);
-  }, [eventQuantities, clickedEvents]);
+    const newTicketData = {};
+    clickedEvents.forEach((event) => {
+      const quantity = eventQuantities[event.id] || 1;
 
+      const promoCodes = listCodeCoupon[event.id] || []; 
+      let idcoupon = null;
+    
+      promoCodes.forEach((promoCode) => {
+        if (promoCode.name === couponValue) {
+          idcoupon = promoCode.id;
+        }
+      });
+      const priceid = totalPriceAfterDiscount[event.id] || totalPrice[event.id];
+
+      newTicketData[event.id] = {
+        eventId: event.id,
+        idCoupon: idcoupon,
+        totalPrice: priceid, 
+        ticketQuantity: quantity,
+      };
+    });
+
+    setTciekt((prevTicket) => ({
+      ...prevTicket,
+      ...newTicketData, 
+    }));
+  },  [eventQuantities, clickedEvents, listCodeCoupon ]);
+
+console.log(ticket)
   const TotalPrice = parseFloat(
     Object.values(totalPrice)
       .reduce((sum, price) => sum + parseFloat(price), 0)
@@ -48,7 +78,9 @@ export default function Checkout({ auth }) {
       ...prevQuantities,
       [id]: quantity,
     }));
+    
   };
+  console.log(clickedEvents)
 
   const handleClickRemove = (id) => {
     removeFromCart(id);
@@ -67,23 +99,32 @@ export default function Checkout({ auth }) {
       setListCodeCoupon({ ...listCodeCoupon, [eventId]: event.codepromos });
     }
   };
-  console.log(totalPriceAfterDiscount);
+  console.log(listCodeCoupon);
 
   useEffect(() => {
-    if (idevent && listCodeCoupon[idevent]) {
+    const applyCouponDiscount = () => {
+      if (!idevent || !listCodeCoupon[idevent]) return;
+  
       const eventCodes = listCodeCoupon[idevent];
       const foundCoupon = eventCodes.find((code) => code.name === couponValue);
+  
       if (foundCoupon) {
-        setTotalPriceAfterDiscount({
-          ...totalPriceAfterDiscount,
-          [idevent]: parseFloat(
-            totalPrice[idevent] -
-              parseFloat((totalPrice[idevent] * foundCoupon.percentage) / 100)
-          ).toFixed(2),
-        });
+        const percentageDiscount = foundCoupon.percentage / 100;
+        const originalPrice = totalPrice[idevent];
+        const discountedPrice = originalPrice - (originalPrice * percentageDiscount);
+        const formattedDiscountedPrice = parseFloat(discountedPrice).toFixed(2);
+  
+        setTotalPriceAfterDiscount(prevTotalPriceAfterDiscount => ({
+          ...prevTotalPriceAfterDiscount,
+          [idevent]: formattedDiscountedPrice,
+        }));
       }
-    }
-  }, [listCodeCoupon, idevent]);
+    };
+  
+    applyCouponDiscount();
+  
+  }, [listCodeCoupon, idevent, couponValue, totalPrice]);
+  
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 ">
@@ -239,7 +280,7 @@ export default function Checkout({ auth }) {
                           </button>
                         </div>
                         <div className="mt-2">
-                          {!totalPriceAfterDiscount[event.id]  && idevent? (
+                          {!totalPriceAfterDiscount[event.id] && idevent ? (
                             <p className="text-red-800">
                               Code Coupon not found
                             </p>
@@ -280,8 +321,11 @@ export default function Checkout({ auth }) {
                       </p>
                     </div>
                   </div>
+
                   <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">
-                    Check out
+                    <Link href={route("paymentevent.index", { eventQuantities ,clickedEvents})}>
+                      Check out
+                    </Link>
                   </button>
                 </div>
               </div>

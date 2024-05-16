@@ -138,7 +138,7 @@ export default function ShoppingCart() {
                       <div className="border-t border-gray-200 px-4 py-6 sm:px-6">
                         <div className="mt-6">
                           <Link
-                            href={route("checkout.index")}
+                            href={route("Checkout")}
                             className="flex items-center justify-center rounded-md border border-transparent bg-blue-900 px-6 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700"
                           >
                             Checkout

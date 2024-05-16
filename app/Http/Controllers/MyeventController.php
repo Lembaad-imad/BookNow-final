@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\EventResource;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\UpdateEvenementRequest;
+use Illuminate\Routing\Route;
 
 class MyeventController extends Controller
 {
@@ -18,6 +19,7 @@ class MyeventController extends Controller
      */
     public function index(Request $request)
     {
+        $urlpath =  $request->path();
         $query = Evenement::query();
         $sortField = $request->input('sort_field', 'created_at');
         $sortDirection = $request->input('sort_direction', 'desc');
@@ -41,10 +43,11 @@ class MyeventController extends Controller
             ->appends($request->only(['sort_field', 'sort_direction', 'titre', 'status']));
         $paginationevent = $query->paginate(9);
         return inertia('Event/Myevent', [
+            'urlpath' => $urlpath,
             'events' => EventResource::collection($events),
-            'paginationevent'=>$paginationevent,
+            'paginationevent' => $paginationevent,
             "queryParams" => request()->query() ?: null,
-            'success'=>session('success')
+            'success' => session('success')
         ]);
     }
 
@@ -75,11 +78,15 @@ class MyeventController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+    public function getPrvUrl($url){
+        return $url;
+    }
     public function edit($id)
     {
-        $event = Evenement::findOrFail($id); 
-        return inertia('Event/Edit',[
-            'event' => new EventResource($event ),
+        session()->put('previous_url', url()->previous());
+        $event = Evenement::findOrFail($id);
+        return inertia('Event/Edit', [
+            'event' => new EventResource($event),
             'allCategories' => Categorie::all()
         ]);
     }
@@ -89,13 +96,16 @@ class MyeventController extends Controller
      */
     public function update(UpdateEvenementRequest $request, $id)
     {
+      
+        $previousUrl = session()->pull('previous_url');
+       
         $evenement = Evenement::findOrFail($id);
-        
+
         $data = $request->validated();
-        $logo = $request->file('logo_path'); 
-        $cover = $request->file('cover_path'); 
+        $logo = $request->file('logo_path');
+        $cover = $request->file('cover_path');
         $data['updated_by'] = Auth::id();
-    
+
         if ($logo) {
             if ($evenement->logo_path) {
                 Storage::disk('public')->deleteDirectory(dirname($evenement->logo_path));
@@ -104,7 +114,7 @@ class MyeventController extends Controller
         } else {
             $data['logo_path'] = $evenement->logo_path;
         }
-    
+
         if ($cover) {
             if ($evenement->cover_path) {
                 Storage::disk('public')->delete($evenement->cover_path);
@@ -113,22 +123,22 @@ class MyeventController extends Controller
         } else {
             $data['cover_path'] = $evenement->cover_path;
         }
-    
-        $evenement->update($data);
-    
-        return redirect()->route('eventlist.index')
-            ->with('success', "Event \"$evenement->titre\" was updated");
-    }
-    
 
-   
+        $evenement->update($data);
+        return redirect($previousUrl)->with('success', "Event \"$evenement->titre\" was updated");
+
+    }
+
+
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
-        $evenement = Evenement::findOrFail($id); 
+
+        $evenement = Evenement::findOrFail($id);
 
         $name = $evenement->titre;
         // dd($name);
@@ -142,7 +152,6 @@ class MyeventController extends Controller
             Storage::disk('public')->delete($evenement->logo_path);
         }
 
-        return to_route('eventlist.index')
-            ->with('success', "Event \"$name\" was deleted");
+        return redirect()->back()->with('success', "Event \"$name\" was deleted");
     }
 }
