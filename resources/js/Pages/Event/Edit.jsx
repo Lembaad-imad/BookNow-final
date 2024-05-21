@@ -1,6 +1,5 @@
 import CodePromos from "@/Components/CodePromos";
 import CodePromosEdit from "@/Components/CodePromosEdit";
-import DecisionAdmin from "@/Components/DecisionAdmin";
 import Footerpage from "@/Components/Footerpage";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
@@ -9,32 +8,52 @@ import SelectInput from "@/Components/SelectInput";
 import TableCodePromos from "@/Components/TableCodePromos";
 import TextAreaInput from "@/Components/TextAreaInput";
 import TextInput from "@/Components/TextInput";
-import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head, Link, router, useForm } from "@inertiajs/react";
 import { useState } from "react";
-import TomSelect from "tom-select";
-export default function Create({ auth, allCategories,event }) {
+
+export default function Create({ auth, allCategories, event }) {
   const [showModal, setShowModal] = useState(false);
   const [idCodePromos, setIdCodePromos] = useState();
   const [showModalEdit, setShowModalEdit] = useState(false);
   const { data, setData, post, errors, reset } = useForm({
-    titre:  event.titre || '',
-    localisation: event.localisation || '',
-    start_date: event.start_date || '',
-    end_date: event.end_date || '',
-    logo_path:  "",
-   
+    titre: event.titre || "",
+    localisation: event.localisation || "",
+    start_date: event.start_date || "",
+    end_date: event.end_date || "",
+    logo_path: "",
     cover_path: "",
-    description: event.description || '',
-    return: event.return || '',
-    capacity: event.capacity || '',
-    prix: event.prix || '',
+    description: event.description || "",
+    return: event.return || "",
+    capacity: event.capacity || "",
+    prix: event.prix || "",
     _method: "put",
   });
-  console.log(event.codepromos);
+  const [decision ,setDecision] =useState({})
+  const [error, setError] = useState('');
+  const handleChangeDecision=(e)=>{
+    const {name,value}=e.target;
+    setDecision({...decision,[name]:value})
+  }
+  console.log(event.id)
+  const handleSubmitDecision = (value) => {
+    const postData = {
+      decision: decision.decision,
+      value: value,
+      event_id: event.id
+    };
+    if (value === 'approved') {
+      post(route("admin.descision", { data : postData})); 
+    } else if (value === 'unapproved') {
+      if (!decision.decision) {
+        setError('Please provide a reason for unapproval.');
+      } else {
+        post(route("admin.descision", { data : postData}));
+      }
+    }
+  };
   const onSubmit = (e) => {
     e.preventDefault();
-    post(route("eventlist.update",event));
+    post(route("eventlist.update", event));
   };
   const toggleModal = () => {
     setShowModal(!showModal);
@@ -42,7 +61,6 @@ export default function Create({ auth, allCategories,event }) {
   const toggleModalEdit = () => {
     setShowModalEdit(!showModalEdit);
   };
-  console.log(event.status)
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 ">
       <Navbar
@@ -50,47 +68,61 @@ export default function Create({ auth, allCategories,event }) {
         header={
           <div className="flex justify-between items-center">
             <h2 className="font-semibold text-xl text-white dark:text-gray-200 leading-tight">
-            Edit Event "{event.titre}"
+              Edit Event "{event.titre}"
             </h2>
           </div>
         }
       />
       <div className="py-12">
         <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+          <div className="bg-deepBlue dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+            <div className="p-6 text-gray-900 dark:text-gray-100">
+            <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg"
+              // onSubmit={handleSubmitDecision}
+            >
+              <h1>Responsible Decision :</h1>
+              <div className="mt-4">
+                <TextAreaInput
+                  id="decision"
+                  name="decision"
+                 
+                  className="mt-1 block w-full"
+                  onChange={handleChangeDecision}
+                />
+              </div>
+              <div className="flex gap-10 mt-4 ">
+                <button className="bg-green-800 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600"
+                  onClick={() => handleSubmitDecision('approved')}
+                >
+                  Approved
+                </button>
+                <button className="bg-red-800 py-1 px-3 text-white rounded shadow transition-all hover:bg-red-600"
+                 onClick={() => handleSubmitDecision('unapproved')}
+                >
+                  Unapproved
+                </button>
+              </div>
+            </div>
+            </div>
             <div className="p-6 text-gray-900 dark:text-gray-100">
               <form
                 onSubmit={onSubmit}
                 className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg"
               >
-               
-                  <div >
-                  <h1 >
-                    
-                    Event Status : <span 
-                    className={ event.status ==="pending" ? "text-orange-300 font-bold text-xl" : event.status ==="approved" ? "text-green-600 font-bold text-xl" :"text-red-600 font-bold text-xl" }>
-                      {event.status}
-                      </span>  
-                      </h1>
-                   
-                  </div>
-                  <div className="mt-4">
-                    <div className="flex gap-10">
-                      <button className="bg-green-800 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600">Approved</button>
-                      <button className="bg-red-800 py-1 px-3 text-white rounded shadow transition-all hover:bg-red-600">Unapproved</button>
-                    </div>
-                    <p>Di</p>
-                    
-                    <div  className="mt-4">
-                    <TextAreaInput
-                    id="description"
-                    name="description"
-                    value={data.description}
-                    className="mt-1 block w-full"
-                    onChange={(e) => setData("description", e.target.value)}
-                  />
-                  </div>
-                  </div>
+                <h1>
+                  Event Status :{" "}
+                  <span
+                    className={
+                      event.status === "pending"
+                        ? "text-orange-300 font-bold text-xl"
+                        : event.status === "approved"
+                        ? "text-green-600 font-bold text-xl"
+                        : "text-red-600 font-bold text-xl"
+                    }
+                  >
+                    {event.status}
+                  </span>
+                </h1>
                 <div className="mt-4">
                   <InputLabel htmlFor="event_title" value="Event Title" />
 
@@ -232,9 +264,9 @@ export default function Create({ auth, allCategories,event }) {
 
                   <InputError message={errors.prix} className="mt-2" />
                 </div>
-             
+
                 <div className="mt-4">
-                <InputLabel htmlFor="event_logo_path" value="Event logo" />
+                  <InputLabel htmlFor="event_logo_path" value="Event logo" />
                   <TextInput
                     id="logo_path"
                     type="file"
@@ -244,15 +276,13 @@ export default function Create({ auth, allCategories,event }) {
                   />
                   <InputError message={errors.logo_path} className="mt-2" />
 
-
-                  
                   <div className="mt-2">
-                  {event.logo_path && (
-                <div className="mb-4">
-                  <img src={event.logo_path} className="w-56" />
-                </div>
-              )}
-              </div>
+                    {event.logo_path && (
+                      <div className="mb-4">
+                        <img src={event.logo_path} className="w-56" />
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="mt-4">
                   <InputLabel htmlFor="event_cover_path" value="Event Cover" />
@@ -264,15 +294,14 @@ export default function Create({ auth, allCategories,event }) {
                     onChange={(e) => setData("cover_path", e.target.files[0])}
                   />
                   <InputError message={errors.cover_path} className="mt-2" />
-                  
                 </div>
                 <div className="mt-2">
                   {event.cover_path && (
-                <div className="mb-4">
-                  <img src={event.cover_path} className="w-56" />
+                    <div className="mb-4">
+                      <img src={event.cover_path} className="w-56" />
+                    </div>
+                  )}
                 </div>
-              )}
-              </div>
                 <div className="mt-4">
                   <InputLabel
                     htmlFor="event_catagories"
@@ -306,32 +335,31 @@ export default function Create({ auth, allCategories,event }) {
                 </div>
               </form>
               <div className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg  mt-10">
-
-              <button  onClick={toggleModal} className="bg-blue-900 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600">
-                    Create Promo code
-                  </button>
-                  <div className="mt-5">
-                    <TableCodePromos codepromosevent={event.codepromos} 
+                <button
+                  onClick={toggleModal}
+                  className="bg-blue-900 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600"
+                >
+                  Create Promo code
+                </button>
+                <div className="mt-5 overflow-x-auto">
+                  <TableCodePromos
+                    codepromosevent={event.codepromos}
                     toggleModalEdit={toggleModalEdit}
                     setIdCodePromos={setIdCodePromos}
-                    />
-                  </div>
+                  />
+                </div>
               </div>
-                    {showModal && (
-                      <CodePromos toggleModal={toggleModal} 
-                      event={event.id}
-                      />
-                    )}
-                    {showModalEdit && (
-                      <CodePromosEdit toggleModalEdit={toggleModalEdit} 
-                      codepromosevent={event.codepromos} 
-                      event={event.id}
-                      idCodePromos={idCodePromos}
-                      />
-                    )}
-                   
-                   
-          
+              {showModal && (
+                <CodePromos toggleModal={toggleModal} event={event.id} />
+              )}
+              {showModalEdit && (
+                <CodePromosEdit
+                  toggleModalEdit={toggleModalEdit}
+                  codepromosevent={event.codepromos}
+                  event={event.id}
+                  idCodePromos={idCodePromos}
+                />
+              )}
             </div>
           </div>
         </div>

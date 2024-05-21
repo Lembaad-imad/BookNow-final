@@ -47,7 +47,7 @@ export default function Navbar({ auth, header,notifcart,countcart ,clickedEvents
                         </div>
           </div>
 
-          {!auth ? (
+          {!auth.user  ? (
             <div className="hidden sm:flex sm:items-center sm:ms-6">
               <div className=" flex">
                 <Link

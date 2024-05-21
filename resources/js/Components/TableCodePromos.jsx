@@ -18,7 +18,7 @@ export default function TableCodePromos({codepromosevent,toggleModalEdit,setIdCo
         setIdCodePromos(e)
     }
     return (
-        <table className="w-full text-sm text-left rt1:text-right text-gray-500 dark:text-gary-400">
+         <table className="w-full text-sm text-left sm:text-right text-gray-500 dark:text-gray-400">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 border-b-2 border-gray-500">
           <tr className="text-nowrap">
             <TableHeading

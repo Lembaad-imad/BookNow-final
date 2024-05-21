@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\AcceuilController;
+use App\Http\Controllers\AdminDescision;
 use App\Http\Controllers\AnotherController;
 use App\Http\Controllers\CodePromosController;
 use App\Http\Controllers\DashBoardController;
@@ -23,6 +24,7 @@ Route::resource('event', EvenementController::class);
 
 Route::resource('/listevent', DashBoardControllerEventlist::class );
 Route::resource('/dashboard', DashBoardController::class);
+Route::put('/dashboard', [AdminDescision::class ,'index'])->name('admin.descision');
 // Route::get('/dashboard/eventlist',DashBoardController::class,'eventlist')->name('dashboard.eventlist');
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
