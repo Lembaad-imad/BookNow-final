@@ -1,100 +1,116 @@
-import ApplicationLogo from "@/Components/ApplicationLogo";
-import Dropdown from "@/Components/Dropdown";
 import Filterside from "@/Components/Filterside";
 import Footerpage from "@/Components/Footerpage";
-import NavLink from "@/Components/NavLink";
 import Navbar from "@/Components/Navbar";
 import Searchinput from "@/Components/Searchinput";
 import Slider from "@/Components/Slider";
-import TextInput from "@/Components/TextInput";
-import { Link, router } from "@inertiajs/react";
 import { useEffect, useState } from "react";
+import axios from 'axios';
 
-export default function Index({ auth, events, queryParams = null,allCategories,paginationevent }) {
-  console.log(events)
-  const [selectedPrice, setSelectedPrice] = useState("");
-  const [dateDebut, setDateDebut] = useState();
-  const [dateFin, setDateFin] = useState();
-  const [checkboxvalues, setCheckboxValues] = useState([]);
-  queryParams = queryParams || {};
+export default function Index({ auth, allCategories }) {
+  const [searchArgs, setSearchArgs] = useState({
+    name: "",
+    price: "",
+    categories: [],
+    sort:"Low to High",
+  });
+  
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [apiResponse, setApiResponse] = useState({
+    events: {
+      data: [],
+      links: [],
+      current_page: 0,
+      last_page: 0,
+      first_page_url: null,
+      last_page_url: null,
+      from: 0,
+      to: 0,
+      next_page_url: null,
+      prev_page_url: null,
+      path: null,
+      per_page: 0,
+      total: 0,
+    },
+    searchParams: null,
+  });
+
+  const [triggerFetch, setTriggerFetch] = useState(false);
+
   const searchFieldChanged = (e) => {
-    const { name, value } = e.target;
-    if (value) {
-      queryParams[name] = value;
-    } else {
-      delete queryParams[name];
-    }
-    router.get(route("event.index"), queryParams);
-  };
+    
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setSearchArgs((prevState) => {
+        const updatedCategories = checked
+          ? [...prevState.categories, value]
+          : prevState.categories.filter((cat) => cat !== value);
 
-  const handleSubmit = (name, e) => {
-    e.preventDefault();
-    searchFieldChanged(name, e.target.value);
-  };
-  const handlePriceChange = (value) => {
-    setSelectedPrice(value);
-    queryParams["price"] = value;
-    router.get(route("event.index"), queryParams);
-  };
-
-  const handleChnagecheckbox = (e) => {
-    const { checked, value } = e.target;
-    let updatedCategories;
-
-    if (checked) {
-      updatedCategories = [...checkboxvalues, value];
-    } else {
-      updatedCategories = checkboxvalues.filter((val) => val !== value);
-    }
-
-    setCheckboxValues(updatedCategories);
-    queryParams["categories"] = updatedCategories;
-    router.get(route("event.index"), queryParams);
-  };
-  const handleDateChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name === "date-start") {
-      setDateDebut(value);
-    } else {
-      setDateFin(value);
-    }
-
-    if (dateDebut && dateFin) {
-      router.get(route("event.index"), {
-        ...queryParams,
-        "date-start": dateDebut,
-        "date-fin": dateFin,
+        return {
+          ...prevState,
+          categories: updatedCategories,
+        };
       });
+    } else {
+      setSearchArgs((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
     }
+    setTriggerFetch((prev) => !prev); 
   };
 
+  const handleSubmit = () => {
+    setIsLoading(true);
+    axios
+      .get("/api/events", {
+        params: {
+          search: searchArgs.name,
+          price: searchArgs.price,
+          categories: searchArgs.categories,
+          sort: searchArgs.sort,
+        },
+      })
+      .then((response) => {
+        setApiResponse(response.data);
+        if (response.data.searchParams) {
+          setSearchArgs((prevState) => ({
+            ...prevState,
+            name: response.data.searchParams.name || prevState.name,
+            price: response.data.searchParams.price || prevState.price,
+            categories: response.data.searchParams.categories || prevState.categories,
+            sort: response.data.searchParams.sort || prevState.sort,
+          }));
+        }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
 
- 
+  useEffect(() => {
+    handleSubmit();
+  
+  }, [triggerFetch]);
 
-
+  console.log(searchArgs);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 ">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <Navbar auth={auth} />
-      
       <Slider />
       <Searchinput
         searchFieldChanged={searchFieldChanged}
-        queryParams={queryParams}
+        queryParams={searchArgs}
       />
       <Filterside
-        events={events}
-        HnadleSubmit={handleSubmit}
-        handlePriceChange={handlePriceChange}
-        queryParams={queryParams}
-        selectedPrice={selectedPrice}
-        handleChnagecheckbox={handleChnagecheckbox}
-        checkboxvalues={checkboxvalues}
+        events={apiResponse.events}
+        queryParams={apiResponse.searchParams}
+        searchArgs={searchArgs}
         allCategories={allCategories}
-        handleDateChange={handleDateChange}
-        paginationevent={paginationevent}
-
+        searchFieldChanged={searchFieldChanged}
+        setSearchArgs={setSearchArgs}
+        setTriggerFetch={setTriggerFetch}
       />
       <Footerpage />
     </div>

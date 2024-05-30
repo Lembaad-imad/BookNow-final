@@ -21,43 +21,12 @@ class EvenementController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Evenement::query();
-
-        if ($request->has("search")) {
-            $query->where("titre", "like", "%" . $request->input("search") . "%");
-        }
-
-        if ($request->has("price")) {
-            if ($request->input("price") === "Paid") {
-                $query->where("prix", ">", 0);
-            } elseif ($request->input("price") === "Free") {
-                $query->where("prix", "=", 0);
-            }
-        }
-
-        if ($request->has("categories")) {
-            $categories = $request->input("categories");
-
-            Categorie::whereIn('label', $categories)->update(['checked' => true]);
-            $checkedCategories = Categorie::where('checked', true)->pluck('label')->toArray();
-
-            $query->whereHas('categories', function ($query) use ($checkedCategories) {
-                $query->whereIn('label', $checkedCategories);
-            });
-        } else {
-            Categorie::query()->update(['checked' => false]);
-        }
-        $query->with('categories');
-        $events = $query->paginate(9);
-        $paginationevent = $query->paginate(9);
-     
+    //  dd($request->all());
         return Inertia::render('Event/Index', [
-            'events' => EventResource::collection($events),
-            'paginationevent'=>$paginationevent,
-            'queryParams' => $request->query() ?: null,
-            // 'auth' => Auth::user(),
+            'auth' => Auth::user(),
             'allCategories' => Categorie::all()
         ]);
+    
     }
 
     /**

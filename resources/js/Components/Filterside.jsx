@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Disclosure, Menu, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import {
@@ -12,11 +12,9 @@ import Cardshop from "./Cardshop";
 import Pagination from "@/Components/Pagination";
 
 const sortOptions = [
-  { name: "Most Popular", href: "#", current: true },
-  { name: "Best Rating", href: "#", current: false },
-  { name: "Newest", href: "#", current: false },
-  { name: "Price: Low to High", href: "#", current: false },
-  { name: "Price: High to Low", href: "#", current: false },
+
+  { name: "Low to High",  current: false },
+  { name: "High to Low",  current: false },
 ];
 
 const filters = [
@@ -28,8 +26,6 @@ const filters = [
       { value: "Free", label: "Free" },
     ],
   },
-
-
 
   {
     id: "date",
@@ -57,9 +53,48 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function Filterside({ events,paginationevent ,handlePriceChange,selectedPrice,handleChnagecheckbox,handleDateChange,allCategories}) {
+export default function Filterside({
+  events,
+  paginationevent,
+  handlePriceChange,
+  selectedPrice,
+  handleChnagecheckbox,
+  setTriggerFetch,
+  allCategories,
+  searchFieldChanged,
+  searchArgs,
+  setSearchArgs,
+}) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  // console.log(events.data)
+  const [SortOptions,setSortOptions] = useState(sortOptions);
+
+  const categoryCheckboxesRef = useRef({});
+  useEffect(() => {
+    allCategories.forEach((category) => {
+      if (searchArgs.categories.includes(category.value)) {
+        categoryCheckboxesRef.current[category.value] = true;
+      }
+    });
+  }, [searchArgs.categories]);
+
+  const handleCategoryCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      categoryCheckboxesRef.current[value] = checked;
+    } else {
+      delete categoryCheckboxesRef.current[value];
+    }
+
+    const updatedCategories = Object.keys(categoryCheckboxesRef.current);
+
+    setSearchArgs((prevState) => ({
+      ...prevState,
+      categories: updatedCategories,
+    }));
+
+    setTriggerFetch((prev) => !prev);
+  };
+  console.log(categoryCheckboxesRef);
   const filters = [
     {
       id: "price",
@@ -69,38 +104,35 @@ export default function Filterside({ events,paginationevent ,handlePriceChange,s
         { value: "Free", label: "Free" },
       ],
     },
-  
+
     {
       id: "category",
       name: "Category",
       options: allCategories.map((category) => ({
         value: category.value,
         label: category.value,
-        checked:category.checked, 
+        checked: searchArgs.categories.includes(category.value),
       })),
     },
+
   
-    {
-      id: "date",
-      name: "Date",
-      options: [
-        {
-          value: "start",
-          label: "Start Date",
-          type: "date",
-          defaultValue: "",
-          checked: false,
-        },
-        {
-          value: "end",
-          label: "End Date",
-          type: "date",
-          defaultValue: "",
-          checked: false,
-        },
-      ],
-    },
   ];
+  const HandlClicksort = (selectedSort)=>{
+    setSortOptions((prevOptions) =>
+      prevOptions.map((option) =>
+        option.name === selectedSort
+          ? { ...option, current: true }
+          : { ...option, current: false }
+      )
+    );
+  
+    setSearchArgs((prevState) => ({
+      ...prevState,
+      sort: selectedSort,
+    }));
+  
+    setTriggerFetch((prev) => !prev);
+  }
   return (
     <>
       <div className="bg-white">
@@ -217,10 +249,8 @@ export default function Filterside({ events,paginationevent ,handlePriceChange,s
                                                     value={option.value}
                                                     type="radio"
                                                     checked={option.checked}
-                                                    onChange={() =>
-                                                      handlePriceChange(
-                                                        option.value
-                                                      )
+                                                    onChange={
+                                                      searchFieldChanged
                                                     }
                                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                   />
@@ -294,15 +324,14 @@ export default function Filterside({ events,paginationevent ,handlePriceChange,s
                         {sortOptions.map((option) => (
                           <Menu.Item key={option.name}>
                             {({ active }) => (
-                              <a
-                                href={option.href}
+                                <a
+                                // href="#"
                                 className={classNames(
-                                  option.current
-                                    ? "font-medium text-gray-900"
-                                    : "text-gray-500",
+                                  option.current ? "font-medium text-gray-900 active" : "text-gray-500",
                                   active ? "bg-gray-100" : "",
-                                  "block px-4 py-2 text-sm"
+                                  "block px-4 py-2 text-sm cursor-pointer"
                                 )}
+                                onClick={() => HandlClicksort(option.name)}
                               >
                                 {option.name}
                               </a>
@@ -317,9 +346,7 @@ export default function Filterside({ events,paginationevent ,handlePriceChange,s
                 <button
                   type="button"
                   className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7"
-                >
-                
-                </button>
+                ></button>
                 <button
                   type="button"
                   className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
@@ -343,7 +370,6 @@ export default function Filterside({ events,paginationevent ,handlePriceChange,s
                       as="div"
                       key={section.id}
                       className="border-b border-gray-200 py-6"
-                      
                     >
                       {({ open }) => (
                         <>
@@ -374,46 +400,37 @@ export default function Filterside({ events,paginationevent ,handlePriceChange,s
                                   key={option.value}
                                   className="flex items-center"
                                 >
-                                  {option.type === "date" ? (
-                                    <div className="">
-                                      <label
-                                        htmlFor={`filter-${section.id}-${optionIdx}`}
-                                        className="ml-3 min-w-0 flex-1 text-gray-500"
-                                      >
-                                        {option.label}
-                                      </label>
-                                      <input
-                                        id={`filter-${section.id}-${option.value}`}
-                                        name={`${section.id}-${option.value}`}
-                                        defaultValue={option.defaultValue}
-                                        onChange={handleDateChange} 
-                                        type="date"
-                                        className="h-10 w-full px-3 border border-gray-300 rounded-md"
-                                      />
-                                    </div>
-                                  ) : (
+                                
                                     <>
-                                      {section.id === "price" ? ( 
-                                     <input
-                                     id={`filter-${section.id}-${optionIdx}`}
-                                     name={`${section.id}`} 
-                                     value={option.value}
-                                     type="radio"
-                                     checked={option.value === selectedPrice} 
-                                     onChange={() => handlePriceChange(option.value)} 
-                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                   />
+                                      {section.id === "price" ? (
+                                        <input
+                                          id={`filter-${section.id}-${optionIdx}`}
+                                          name={`${section.id}`}
+                                          value={option.value}
+                                          type="radio"
+                                          checked={
+                                            option.value === searchArgs.price
+                                          }
+                                          onChange={searchFieldChanged}
+                                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        />
                                       ) : (
                                         <input
-                                        key={option.value}
-                                        id={`filter-${section.id}-${optionIdx}`}
-                                        name={`${section.id}[]`}
-                                        value={option.value}
-                                        type="checkbox"
-                                        onChange={handleChnagecheckbox}
-                                        checked={option.checked}
-                                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                      />
+                                          key={option.value}
+                                          id={`filter-${section.id}-${optionIdx}`}
+                                          name={`${section.id}[]`}
+                                          value={option.value}
+                                          type="checkbox"
+                                          onChange={
+                                            handleCategoryCheckboxChange
+                                          }
+                                          checked={
+                                            categoryCheckboxesRef.current[
+                                              option.value
+                                            ] || false
+                                          }
+                                          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        />
                                       )}
                                       <label
                                         htmlFor={`filter-${section.id}-${optionIdx}`}
@@ -422,7 +439,7 @@ export default function Filterside({ events,paginationevent ,handlePriceChange,s
                                         {option.label}
                                       </label>
                                     </>
-                                  )}
+                                
                                 </div>
                               ))}
                             </div>
@@ -439,9 +456,7 @@ export default function Filterside({ events,paginationevent ,handlePriceChange,s
                       <Cardshop key={index} event={event} />
                     ))}
                   </div>
-                  <div>
-                    <Pagination links={paginationevent.links} />
-                  </div>
+                  <div>{/* <Pagination links={paginationevent} /> */}</div>
                 </div>
               </div>
             </section>

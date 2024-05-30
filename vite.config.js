@@ -10,4 +10,16 @@ export default defineConfig({
         }),
         react(),
     ],
+    build: {
+        outDir: 'public/build', // Specify the output directory
+        rollupOptions: {
+            input: 'resources/js/app.jsx', // Ensure this matches your input path
+            output: {
+                // Customize the output format and file naming if needed
+                entryFileNames: '[name].[hash].js',
+                chunkFileNames: '[name].[hash].js',
+                assetFileNames: '[name].[hash].[ext]',
+            },
+        },
+    },
 });
