@@ -157,7 +157,7 @@ const TableListEvent = ({events, auth, queryParams = null, success,paginationeve
                       <img src={event.logo_path} style={{ width: 60 }} />
                     </td>
                     <th className="px-3 py-2 text-gray-800 text-nowrap hover:underline">
-                      <Link href={route(`${urlpath}.show`, event.id)}>
+                      <Link href={route(`eventlist.edit`,{'id' : event.id, 'fromRoute': urlpath} )}>
                         {event.titre}
                       </Link>
                     </th>

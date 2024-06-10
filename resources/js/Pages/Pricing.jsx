@@ -42,7 +42,7 @@ function FeeCalculator() {
         const totalAmount = subtotal + feeAmount;
         return totalAmount;
     };
-
+    
     return (
         <section className="flex m-16 bg-gradient-to-r from-teal-600 via-teal-400 to-teal-200 p-6 rounded-lg shadow-md">
             <div className="w-1/2 bg-white p-6 rounded-t-sm rounded-lg shadow-md">
@@ -101,6 +101,7 @@ function FeeCalculator() {
 
 
 export default function Welcome({ children, auth }) {
+    console.log(auth)
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900 ">
             <nav className="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">

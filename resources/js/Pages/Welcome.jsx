@@ -63,7 +63,7 @@ export default function Welcome({ children, auth }) {
                                 <p className="flex-grow">SUPPORT</p>
                                 <Link
                                     href="#"
-                                    className="bg-blue-900 py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 inline-block w-28 h-10 sm:w-auto sm:h-12"
+                                    className="bg-blue-900 py-3 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 inline-block w-28 h-10 sm:w-auto sm:h-12"
                                 >
                                     contact us
                                 </Link>
@@ -85,7 +85,7 @@ export default function Welcome({ children, auth }) {
                                 <p className="flex-grow">SIMPLIFY</p>
                                 <Link
                                     href="#"
-                                    className="bg-blue-900 py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 inline-block w-28 h-10 sm:w-auto sm:h-12"
+                                    className="bg-blue-900 py-3 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 inline-block w-28 h-10 sm:w-auto sm:h-12"
                                 >
                                     buy now
                                 </Link>
@@ -105,7 +105,7 @@ export default function Welcome({ children, auth }) {
                                 <p className="flex-grow">STREAMLINE</p>
                                 <Link
                                     href="#"
-                                    className="bg-blue-900 py-2 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 hover:text-blue-900 inline-block w-28 h-10 sm:w-auto sm:h-12"
+                                    className="bg-blue-900 py-3 px-4 text-white text-center rounded shadow transition-all hover:bg-gray-200 hover:text-blue-900 inline-block w-28 h-10 sm:w-auto sm:h-12"
                                 >
                                     create
                                 </Link>

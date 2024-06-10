@@ -23,7 +23,7 @@ class EvenementController extends Controller
     {
     //  dd($request->all());
         return Inertia::render('Event/Index', [
-            'auth' => Auth::user(),
+            // 'auth' => Auth::user(),
             'allCategories' => Categorie::all()
         ]);
     
@@ -37,7 +37,7 @@ class EvenementController extends Controller
         
         $categories = Categorie::pluck('value','id');
         return inertia("Event/Create",[
-            'auth' => Auth::user(),
+            // 'auth' => Auth::user(),
             'allCategories' => Categorie::all()
 
         ]);

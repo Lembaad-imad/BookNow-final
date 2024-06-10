@@ -7,6 +7,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\AcceuilController;
 use App\Http\Controllers\AdminDescision;
 use App\Http\Controllers\AnotherController;
+use App\Http\Controllers\BreadcrumbController;
 use App\Http\Controllers\CodePromosController;
 use App\Http\Controllers\DashBoardController;
 use App\Http\Controllers\DashBoardControllerEventlist;
@@ -29,7 +30,7 @@ Route::put('/dashboard', [AdminDescision::class ,'index'])->name('admin.descisio
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
 // })->name('dashboard');
-
+// Route::post('/api/breadcrumbs', [BreadcrumbController::class, 'getBreadcrumbs']);
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

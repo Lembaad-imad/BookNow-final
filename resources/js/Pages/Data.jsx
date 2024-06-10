@@ -8,13 +8,19 @@ import {
   InboxIcon,
   PowerIcon,
 } from "@heroicons/react/24/solid";
+import LineGraph from '@/Components/LineGraph';
 const Data = ({ auth,
     counts,
+    tickets,
     events,
     queryParams = null,
     success,
     paginationevent,
     urlpath,}) => {
+      const calculateTotalTicketsSold = (tickets) => {
+        return tickets.reduce((total, ticket) => total + ticket.quantity, 0);
+    };
+    const totalTicketsSold = calculateTotalTicketsSold(tickets);
         const data = [
           {
             icons: <ShoppingBagIcon />,
@@ -28,7 +34,7 @@ const Data = ({ auth,
           },
           {
             icons: <ShoppingBagIcon />,
-            statick: counts.ticketsCount,
+            statick: totalTicketsSold,
             text: "Total Ticktes",
           },
           {
@@ -37,6 +43,8 @@ const Data = ({ auth,
             text: "Total Revenus",
           },
         ];
+        console.log(tickets)
+        
   return (
     <Dashboard auth={auth}>
   <div className="flex gap-5">
@@ -50,6 +58,7 @@ const Data = ({ auth,
             </div>
          )}
          </div>
+       <LineGraph tickets={tickets}/>
     </Dashboard>
   )
 }

@@ -323,9 +323,9 @@ console.log(ticket)
                   </div>
 
                   <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">
-                    <Link href={route("paymentevent.index", { eventQuantities ,clickedEvents})}>
+                    <a href={route("paymentevent.index", { eventQuantities ,clickedEvents})}>
                       Check out
-                    </Link>
+                    </a>
                   </button>
                 </div>
               </div>

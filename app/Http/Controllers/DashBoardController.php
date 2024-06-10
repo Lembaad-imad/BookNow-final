@@ -24,12 +24,15 @@ class DashBoardController extends Controller
     }
     public function index(Request $request)
     {
+        
         $counts = $this->statisticsEevents();
+        $tickets = Ticket::all();
         // $event = Evenement::all();
         // $eventViewsCount = Views::count($event);
         // dd($eventViewsCount);
         return Inertia::render('Data',[
             'counts' => $counts,
+            'tickets' => $tickets,
         ]);
     }
     // public function eventlist(Request $request)

@@ -5,6 +5,8 @@ import Searchinput from "@/Components/Searchinput";
 import Slider from "@/Components/Slider";
 import { useEffect, useState } from "react";
 import axios from 'axios';
+import Breadcrumbs from "@/Components/Breadcrumbs";
+// import { Breadcrumbs } from "@material-tailwind/react";
 
 export default function Index({ auth, allCategories }) {
   const [searchArgs, setSearchArgs] = useState({
@@ -59,7 +61,7 @@ export default function Index({ auth, allCategories }) {
     }
     setTriggerFetch((prev) => !prev); 
   };
-
+console.log(auth)
   const handleSubmit = () => {
     setIsLoading(true);
     axios
@@ -98,6 +100,7 @@ export default function Index({ auth, allCategories }) {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Navbar auth={auth} />
+      
       <Slider />
       <Searchinput
         searchFieldChanged={searchFieldChanged}
