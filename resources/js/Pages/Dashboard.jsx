@@ -71,8 +71,8 @@ function Dashboard({
                 <UserCircleIcon className="h-5 w-5" />
               </ListItemPrefix>
               <NavLink
-                href={route("listevent.index")}
-                active={route().current("listevent.index")}
+                href={route("listusers")}
+                active={route().current("listusers")}
               >
                 Users
               </NavLink>

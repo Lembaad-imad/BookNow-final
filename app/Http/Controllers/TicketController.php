@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Ticket;
 use App\Http\Requests\StoreTicketRequest;
 use App\Http\Requests\UpdateTicketRequest;
+use App\Http\Resources\EventResource;
+use App\Models\Evenement;
 use Illuminate\Http\Request;
 
 class TicketController extends Controller
@@ -14,13 +16,15 @@ class TicketController extends Controller
      */
     public function index(Request $request)
     {
+        $events =Evenement::all();
         $clickedEvents = $request->input();
-        $quanitut = $request->input('eventQuantities');
+        return inertia('Event/Payment', [
+            'events' => EventResource::collection($events),
+            'clickedEvents' =>  $clickedEvents
+        ]);
     
-        dd($clickedEvents);
     
-    
-        // return response()->json(['success' => true]);
+        
     }
 
     /**

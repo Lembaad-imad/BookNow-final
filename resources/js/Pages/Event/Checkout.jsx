@@ -2,7 +2,7 @@ import Footerpage from "@/Components/Footerpage";
 import useCheckedEvent from "@/zustand/CheckedEvent";
 import Navbar from "@/Components/Navbar";
 import { useEffect, useState } from "react";
-import { Link, useForm } from "@inertiajs/react";
+import { Link, router, useForm } from "@inertiajs/react";
 
 export default function Checkout({ auth }) {
   const { clickedEvents, removeFromCart } = useCheckedEvent((state) => ({
@@ -15,8 +15,11 @@ export default function Checkout({ auth }) {
   const [totalPrice, setTotalprice] = useState({});
   const [totalPriceAfterDiscount, setTotalPriceAfterDiscount] = useState({});
   const [idevent, setIdevent] = useState();
+  const [PriceAfterDiscounttotal, setPriceAfterDiscounttotal] = useState();
   const [listCodeCoupon, setListCodeCoupon] = useState({});
   const [ticket, setTciekt] = useState({});
+  const [couponApplied, setCouponApplied] = useState({});
+  const [eventData, setEventData] = useState([]);
 
   useEffect(() => {
     const initialQuantities = clickedEvents.reduce(
@@ -28,7 +31,7 @@ export default function Checkout({ auth }) {
     );
     setEventQuantities(initialQuantities);
   }, [clickedEvents]);
-  console.log(eventQuantities)
+  // console.log(eventQuantities)
 
   useEffect(() => {
     const newTotalPrices = {};
@@ -49,13 +52,14 @@ export default function Checkout({ auth }) {
           idcoupon = promoCode.id;
         }
       });
-      const priceid = totalPriceAfterDiscount[event.id] || totalPrice[event.id];
 
       newTicketData[event.id] = {
         eventId: event.id,
         idCoupon: idcoupon,
-        totalPrice: priceid, 
-        ticketQuantity: quantity,
+
+        quantity: eventQuantities[event.id] || 1,
+        price: event.prix,
+        total_price:totalPriceAfterDiscount[event.id] ? (totalPrice[event.id] - totalPriceAfterDiscount[event.id]).toFixed(2) : totalPrice[event.id],
       };
     });
 
@@ -65,7 +69,7 @@ export default function Checkout({ auth }) {
     }));
   },  [eventQuantities, clickedEvents, listCodeCoupon ]);
 
-console.log(ticket)
+// console.log(ticket)
   const TotalPrice = parseFloat(
     Object.values(totalPrice)
       .reduce((sum, price) => sum + parseFloat(price), 0)
@@ -80,7 +84,8 @@ console.log(ticket)
     }));
     
   };
-  console.log(clickedEvents)
+  // console.log(clickedEvents)
+  // console.log(couponApplied)
 
   const handleClickRemove = (id) => {
     removeFromCart(id);
@@ -92,14 +97,19 @@ console.log(ticket)
   };
 
   const handleClickCouponButton = (eventId) => {
+    
     setIdevent(eventId);
     const event = clickedEvents.find((e) => e.id === eventId);
 
     if (event && event.codepromos) {
       setListCodeCoupon({ ...listCodeCoupon, [eventId]: event.codepromos });
     }
+    setCouponApplied((prevCouponApplied) => ({
+      ...prevCouponApplied,
+      [eventId]: true,
+    }));
   };
-  console.log(listCodeCoupon);
+  // console.log(listCodeCoupon);
 
   useEffect(() => {
     const applyCouponDiscount = () => {
@@ -113,6 +123,7 @@ console.log(ticket)
         const originalPrice = totalPrice[idevent];
         const discountedPrice = originalPrice - (originalPrice * percentageDiscount);
         const formattedDiscountedPrice = parseFloat(discountedPrice).toFixed(2);
+       
   
         setTotalPriceAfterDiscount(prevTotalPriceAfterDiscount => ({
           ...prevTotalPriceAfterDiscount,
@@ -124,8 +135,33 @@ console.log(ticket)
     applyCouponDiscount();
   
   }, [listCodeCoupon, idevent, couponValue, totalPrice]);
-  
+  useEffect(() => {
+    const totalDiscountedPrice = Object.values(totalPriceAfterDiscount).reduce((acc, price) => acc + parseFloat(price), 0);
+    setPriceAfterDiscounttotal(totalDiscountedPrice.toFixed(2));
+  }, [totalPriceAfterDiscount]);
+const handleClickCheckout =()=>{
+  console.log(ticket)
+  router.post(route('paymentevent.index'), { eventData })
 
+}
+// const constructEventData = () => {
+
+//   ;
+//   const newData = clickedEvents.map(event => ({
+    
+//     event_id: event.id,
+//     quantity: eventQuantities[event.id] || 1,
+//     price: event.prix,
+//     total_price: totalPrice[event.id] - totalPriceAfterDiscount[event.id] || totalPrice[event.id],
+//     // idcoupon:idcoupon
+//   }));
+
+//   setEventData(newData);
+// };
+
+// useEffect(() => {
+//   constructEventData();
+// }, [clickedEvents, eventQuantities, totalPrice, totalPriceAfterDiscount]);
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 ">
       <Navbar
@@ -280,7 +316,7 @@ console.log(ticket)
                           </button>
                         </div>
                         <div className="mt-2">
-                          {!totalPriceAfterDiscount[event.id] && idevent ? (
+                          {!totalPriceAfterDiscount[event.id] && idevent && event.id ===couponApplied[event.id] ? (
                             <p className="text-red-800">
                               Code Coupon not found
                             </p>
@@ -310,23 +346,28 @@ console.log(ticket)
                   </div>
                   <div className="flex justify-between">
                     <p className="text-gray-700">Discound</p>
-                    <p className="text-gray-700 line-through">-$4.99</p>
+                    <p className="text-gray-700 line-through text-green-800">{PriceAfterDiscounttotal}</p>
                   </div>
                   <hr className="my-4" />
                   <div className="flex justify-between">
                     <p className="text-lg font-bold">Total</p>
                     <div>
                       <p className="mb-1 text-lg font-bold">
-                        ${TotalPrice} USD
+                        ${(TotalPrice - PriceAfterDiscounttotal).toFixed(2)} USD
                       </p>
                     </div>
                   </div>
 
-                  <button className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600">
-                    <a href={route("paymentevent.index", { eventQuantities ,clickedEvents})}>
-                      Check out
-                    </a>
-                  </button>
+                  <Link
+                    href={route('paymentevent.index',ticket)}
+                  
+                    
+                    as="button"
+                    className="mt-6 w-full rounded-md bg-blue-500 py-1.5 font-medium text-blue-50 hover:bg-blue-600"
+                    // onClick={handleClickCheckout}
+                  >
+                    Check out
+                  </Link>
                 </div>
               </div>
             </div>

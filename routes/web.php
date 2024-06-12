@@ -24,6 +24,7 @@ Route::resource('event', EvenementController::class);
 // Route::get('/dashboard', [DashBoardControllerEventlist::class, 'index'])->name('listevent.index');
 
 Route::resource('/listevent', DashBoardControllerEventlist::class );
+Route::get('/listuser', [DashBoardControllerEventlist::class ,'listusers'])->name('listusers');
 Route::resource('/dashboard', DashBoardController::class);
 Route::put('/dashboard', [AdminDescision::class ,'index'])->name('admin.descision');
 // Route::get('/dashboard/eventlist',DashBoardController::class,'eventlist')->name('dashboard.eventlist');
@@ -52,5 +53,10 @@ Route::get('/contact', function () {
 
 Route::resource('paymentevent', TicketController::class);
 
+Route::get('/Thankyou', function () {
+    return Inertia::render('Event/ThankYouPage', [
+        'auth' => Auth::user(),
+    ]);
+})->name('thankyou');
 
 require __DIR__.'/auth.php';

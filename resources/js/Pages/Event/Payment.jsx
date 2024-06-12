@@ -1,13 +1,39 @@
-// src/components/PaymentForm.js
 import Footerpage from "@/Components/Footerpage";
 import InputError from "@/Components/InputError";
 import InputLabel from "@/Components/InputLabel";
 import Navbar from "@/Components/Navbar";
 import TextInput from "@/Components/TextInput";
 import { Link } from "@inertiajs/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-function PaymentForm({ auth }) {
+function PaymentForm({ auth, clickedEvents, events }) {
+  const [eventDetails, setEventDetails] = useState([]);
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    const eventsArray = Object.values(events.data);
+    const mergedEvents = Object.values(clickedEvents).map((clickedEvent) => {
+      const event = eventsArray.find(e => e.id === parseInt(clickedEvent.eventId));
+      if (event) {
+        return {
+          ...event,
+          total_price: clickedEvent.total_price,
+          quantity: clickedEvent.quantity,
+        };
+      }
+      return null;
+    }).filter(event => event !== null);
+
+    setEventDetails(mergedEvents);
+
+    const calculatedTotalPrice = mergedEvents.reduce((total, event) => {
+      return total + parseFloat(event.total_price);
+    }, 0);
+
+    setTotalPrice(calculatedTotalPrice);
+
+  }, [events, clickedEvents]);
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 ">
       <Navbar
@@ -23,7 +49,7 @@ function PaymentForm({ auth }) {
       <div className="py-6">
         <div className="max-w-full mx-auto sm:px-6 lg:px-8">
           <div className="p-2 text-gray-900 dark:text-gray-100">
-            <div className=" pt-20">
+            <div className="pt-20">
               <div className="font-sans bg-white">
                 <div className="max-lg:max-w-xl mx-auto w-full">
                   <div className="grid lg:grid-cols-3 gap-6">
@@ -47,20 +73,18 @@ function PaymentForm({ auth }) {
                                 placeholder="Name"
                                 className="mt-1 block w-full"
                               />
-
                               <InputError message="" className="mt-2" />
                             </div>
                             <div className="mt-4">
-                            <TextInput
-                              id="email"
-                              type="text"
-                              name="email"
-                              placeholder="Address Email"
-                              className="mt-1 block w-full"
-                            />
-
-                            <InputError message="" className="mt-2" />
-                          </div>
+                              <TextInput
+                                id="email"
+                                type="text"
+                                name="email"
+                                placeholder="Address Email"
+                                className="mt-1 block w-full"
+                              />
+                              <InputError message="" className="mt-2" />
+                            </div>
                           </div>
                         </div>
                         <div className="mt-12">
@@ -96,56 +120,49 @@ function PaymentForm({ auth }) {
                                 />
                               </label>
                             </div>
-                          
                           </div>
                           <div className="grid gap-6 mt-8">
-                          <div className="mt-4">
-                            <TextInput
-                              id="cardname"
-                              type="text"
-                              name="cardname"
-                              placeholder="Cardholder's Name"
-                              className="mt-1 block w-full"
-                            />
-
-                            <InputError message="" className="mt-2" />
-                          </div>
-                          <div className="mt-4">
-                            <TextInput
-                              id="cardnumber"
-                              type="text"
-                              name="cardnumber"
-                              placeholder="Card Number"
-                              className="mt-1 block w-full"
-                            />
-
-                            <InputError message="" className="mt-2" />
-                          </div>
-                        
-                            <div className="grid grid-cols-2 gap-6">
                             <div className="mt-4">
-                            <TextInput
-                              id="exp"
-                              type="text"
-                              name="exp"
-                              placeholder="EXP."
-                              className="mt-1 block w-full"
-                            />
-
-                            <InputError message="" className="mt-2" />
-                          </div>
-                          <div className="mt-4">
-                            <TextInput
-                              id="cvv"
-                              type="password"
-                              name="cvv"
-                              placeholder="CVV"
-                              className="mt-1 block w-full"
-                            />
-
-                            <InputError message="" className="mt-2" />
-                          </div>
-                            
+                              <TextInput
+                                id="cardname"
+                                type="text"
+                                name="cardname"
+                                placeholder="Cardholder's Name"
+                                className="mt-1 block w-full"
+                              />
+                              <InputError message="" className="mt-2" />
+                            </div>
+                            <div className="mt-4">
+                              <TextInput
+                                id="cardnumber"
+                                type="text"
+                                name="cardnumber"
+                                placeholder="Card Number"
+                                className="mt-1 block w-full"
+                              />
+                              <InputError message="" className="mt-2" />
+                            </div>
+                            <div className="grid grid-cols-2 gap-6">
+                              <div className="mt-4">
+                                <TextInput
+                                  id="exp"
+                                  type="text"
+                                  name="exp"
+                                  placeholder="EXP."
+                                  className="mt-1 block w-full"
+                                />
+                                <InputError message="" className="mt-2" />
+                              </div>
+                              <div className="mt-4">
+                                <TextInput
+                                  id="cvv"
+                                  type="password"
+                                  name="cvv"
+                                  placeholder="CVV"
+                                  className="mt-1 block w-full"
+                                />
+                                <InputError message="" className="mt-2" />
+                              </div>
                             </div>
                             <div className="flex items-center">
                               <input
@@ -177,12 +194,13 @@ function PaymentForm({ auth }) {
                           >
                             Back
                           </Link>
-                          <button
+                          <Link
                             type="button"
+                            href={route("thankyou")}
                             className="min-w-[150px] px-6 py-3.5 text-sm bg-blue-900 text-white rounded-md hover:bg-[#111]"
                           >
-                            Confirm payment $240
-                          </button>
+                           Pay {totalPrice}$
+                          </Link>
                         </div>
                       </form>
                     </div>
@@ -193,12 +211,21 @@ function PaymentForm({ auth }) {
                             Order Summary
                           </h2>
                           <div className="space-y-6 mt-10">
-                            {/* Order summary items */}
+                            {eventDetails.map((e, index) => (
+                              <div key={index} className="flex items-center gap-4">
+                                <img src={e.logo_path} alt={e.titre} className="w-16 h-16 object-cover" />
+                                <div>
+                                  <h4 className="font-semibold">{e.titre}</h4>
+                                  <p>Quantity: {e.quantity}</p>
+                                  <p>Total Price: ${e.total_price}</p>
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
                         <div className="absolute left-0 bottom-0 bg-gray-200 w-full p-4">
                           <h4 className="flex flex-wrap gap-4 text-base text-[#333] font-bold">
-                            Total <span className="ml-auto">$240.00</span>
+                            Total <span className="ml-auto">${totalPrice.toFixed(2)}</span>
                           </h4>
                         </div>
                       </div>
@@ -210,7 +237,6 @@ function PaymentForm({ auth }) {
           </div>
         </div>
       </div>
-
       <Footerpage />
     </div>
   );
